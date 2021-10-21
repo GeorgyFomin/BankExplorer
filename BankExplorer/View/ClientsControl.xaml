@@ -1,0 +1,52 @@
+﻿<ContentControl x:Class="BankExplorer.View.ClientsControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BankExplorer.View" xmlns:viewmodels="clr-namespace:BankExplorer.ViewModels" 
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors" d:DataContext="{d:DesignInstance Type=viewmodels:ClientsViewModel}"
+                mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid Style="{StaticResource ResourceKey=BlackNavy}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <StackPanel x:Name="panel" Orientation="Horizontal">
+            <TextBlock Text="Clients Of Department" FontSize="20"/>
+            <TextBlock Text="{Binding DepName}" FontSize="20" Margin="5,0,0,0" FontStyle="Italic" FontWeight="Medium" 
+                     Foreground="#FF68B252" />
+        </StackPanel>
+        <DataGrid RowHeaderStyle="{StaticResource BlackNavy}" x:Name="clientsGrid" Grid.Row="1" ItemsSource="{Binding DataSource}" DataContext="{Binding Mode=OneWay}" 
+                  AutoGenerateColumns="False" Style="{StaticResource ResourceKey=BlackNavy}" RowStyle="{StaticResource RowStyle}" 
+                  BorderThickness="0" CellStyle="{StaticResource CellStyle}" CanUserAddRows="False">
+            <DataGrid.ContextMenu>
+                <ContextMenu Style="{StaticResource contextMenu}">
+                    <MenuItem Header="Remove" Visibility="{Binding RemoveVisibility}" Command="{Binding RemoveClientCommand}" />
+                    <MenuItem Header="Add Client" Command="{Binding AddClientCommand}" Visibility="{Binding AddVisibility}"
+                              CommandParameter="{Binding PlacementTarget, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"/>
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+            <DataGrid.ColumnHeaderStyle>
+                <Style BasedOn="{StaticResource ResourceKey=BlackNavy}"/>
+            </DataGrid.ColumnHeaderStyle>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}" EditingElementStyle="{StaticResource EditingCellTextBox}"/>
+            </DataGrid.Columns>
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="SelectionChanged">
+                    <i:InvokeCommandAction Command="{Binding SelCommand}" CommandParameter="{Binding ElementName=clientsGrid}"/>
+                </i:EventTrigger>
+                <i:EventTrigger EventName="CellEditEnding">
+                    <i:InvokeCommandAction Command="{Binding EndClientEditCommand}" />
+                </i:EventTrigger>
+                <i:EventTrigger EventName="BeginningEdit">
+                    <i:InvokeCommandAction Command="{Binding BeginningEdit}" CommandParameter="{Binding ElementName=clientsGrid}"/>
+                </i:EventTrigger>
+                <!--<i:EventTrigger EventName="AddingNewItem">
+                    <i:InvokeCommandAction Command="{Binding ClientAddedCommand}" CommandParameter="{Binding ElementName=clientsGrid}"/>
+                </i:EventTrigger>-->
+            </i:Interaction.Triggers>
+        </DataGrid>
+    </Grid>
+</ContentControl>

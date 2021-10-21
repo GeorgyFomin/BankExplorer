@@ -1,0 +1,230 @@
+﻿<Window x:Class="BankExplorer.MainWindow" x:Name="mWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:local="clr-namespace:BankExplorer"
+        xmlns:viewmodels="clr-namespace:BankExplorer.ViewModels" xmlns:local1="clr-namespace:BankExplorer.View" d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel}"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="437.021" Width="892" WindowStyle="None" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <Image x:Key="depIcon" x:Shared="false"  Source="/Department.png"/>
+        <Image x:Key="clientIcon" x:Shared="false"  Source="/Client.png"/>
+        <Image x:Key="accIcon" x:Shared="false"  Source="/Account.png"/>
+    </Window.Resources>
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" FlowDirection="RightToLeft" Background="{StaticResource mainBckgr}" Height="20" >
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseLeftButtonDown">
+                    <i:InvokeCommandAction Command="{Binding DragCommand}" CommandParameter="{Binding ElementName=mWindow}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            <Button x:Name="CloseButton" Background="Transparent" BorderBrush="Transparent" Style="{StaticResource ButtonStyle1}" >
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <i:InvokeCommandAction Command="{Binding CloseCommand}" CommandParameter="{Binding ElementName=mWindow}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+                <Button.Content>
+                    <StackPanel>
+                        <fa:IconBlock Width="20" Icon="WindowClose" Foreground="#9a9a9a"/>
+                    </StackPanel>
+                </Button.Content>
+            </Button>
+            <Button x:Name="Maximize" Background="Transparent" BorderBrush="Transparent" Style="{StaticResource headerBtn}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <i:InvokeCommandAction Command="{Binding MaximizeCommand}" CommandParameter="{Binding ElementName=mWindow}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+                <Button.Content>
+                    <StackPanel >
+                        <fa:IconBlock x:Name="MaxIconBlock" Width="20" Icon="WindowMaximize" Foreground="#9a9a9a"/>
+                    </StackPanel>
+                </Button.Content>
+            </Button>
+            <Button x:Name="Minimize" Background="Transparent" BorderBrush="Transparent" Style="{StaticResource headerBtn}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <i:InvokeCommandAction Command="{Binding MinimizeCommand}" CommandParameter="{Binding ElementName=mWindow}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+                <Button.Content>
+                    <StackPanel>
+                        <fa:IconBlock Width="20" Icon="WindowMinimize" Foreground="#9a9a9a"/>
+                    </StackPanel>
+                </Button.Content>
+            </Button>
+            <Button Style="{StaticResource headerBtn}" Foreground="LightGreen">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <i:InvokeCommandAction Command="{Binding ResetBankCommand}" CommandParameter="{Binding ElementName=Clients}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+                Random Bank
+            </Button>
+            <Button Style="{StaticResource headerBtn}" Foreground="LightGreen" Command="{Binding RetrieveLogDialogCommand}" Content="Retreive Log" Margin="5,0"/>
+            <Button Style="{StaticResource headerBtn}" Foreground="LightGreen" Command="{Binding VisualLogicTreesDialogCommand}" 
+                    CommandParameter="{Binding ElementName=mWindow}" Content="Visual And Logical Trees" Margin="0,0,5,0"/>
+        </StackPanel>
+        <Grid DockPanel.Dock="Left" Width="300" Style="{StaticResource ResourceKey=BlackNavy}">
+            <DockPanel>
+                <Menu Name="menu1" DockPanel.Dock="Top" Margin="10,10,10,10" Background="Transparent" Foreground="Yellow">
+                    <MenuItem ItemsSource="{Binding Deps}">
+                        <MenuItem.ItemContainerStyle>
+                            <Style TargetType="{x:Type MenuItem}">
+                                <Setter Property="Icon" Value="{StaticResource depIcon}"/>
+                            </Style>
+                        </MenuItem.ItemContainerStyle>
+                        <MenuItem.Icon>
+                            <Image Source="/Bank.png">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="MouseDown">
+                                        <i:InvokeCommandAction 
+                                            Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type local:MainWindow}}, 
+                                            Path=DataContext.DepsCommand}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </Image>
+                        </MenuItem.Icon>
+                        <MenuItem.Header>
+                            <TextBox VerticalAlignment="Bottom" Style="{StaticResource EditingCellTextBox}" BorderThickness="0" Background="Transparent"
+                                             Text="{Binding BankName, UpdateSourceTrigger=PropertyChanged}" CaretBrush="Cyan"/>
+                        </MenuItem.Header>
+                        <MenuItem.ItemTemplate>
+                            <HierarchicalDataTemplate x:Name="depMenuItem" ItemsSource="{Binding Clients}" >
+                                <TextBlock VerticalAlignment="Center" Text="{Binding Name}" Margin="5,0,5,0">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="MouseDown">
+                                            <i:InvokeCommandAction 
+                                                Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type local:MainWindow}},
+                                                Path=DataContext.DepClientsCommand}" 
+                                                CommandParameter="{Binding}"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </TextBlock>
+                                <HierarchicalDataTemplate.ItemContainerStyle>
+                                    <Style TargetType="{x:Type MenuItem}">
+                                        <Setter Property="Icon" Value="{StaticResource clientIcon}"/>
+                                    </Style>
+                                </HierarchicalDataTemplate.ItemContainerStyle>
+                                <HierarchicalDataTemplate.ItemTemplate>
+                                    <HierarchicalDataTemplate x:Name="clientMenuItem" ItemsSource="{Binding Accounts}">
+                                        <TextBlock VerticalAlignment="Center" Text="{Binding Name}" Margin="5,0,5,0">
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="MouseDown">
+                                                    <i:InvokeCommandAction 
+                                                        Command="{Binding RelativeSource = {RelativeSource Mode = FindAncestor,                                                                        
+                                                        AncestorType = {x:Type local:MainWindow}}, Path = DataContext.ClientAccountsCommand}" 
+                                                        CommandParameter="{Binding}"/>
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
+                                        </TextBlock>
+                                        <HierarchicalDataTemplate.ItemContainerStyle>
+                                            <Style TargetType="{x:Type MenuItem}">
+                                                <Setter Property="Icon" Value="{StaticResource accIcon}"/>
+                                            </Style>
+                                        </HierarchicalDataTemplate.ItemContainerStyle>
+                                        <HierarchicalDataTemplate.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock VerticalAlignment="Center" Text="{Binding}" Margin="5,0,0,0"/>
+                                            </DataTemplate>
+                                        </HierarchicalDataTemplate.ItemTemplate>
+                                    </HierarchicalDataTemplate>
+                                </HierarchicalDataTemplate.ItemTemplate>
+                            </HierarchicalDataTemplate>
+                        </MenuItem.ItemTemplate>
+                    </MenuItem>
+                </Menu>
+                <TreeView x:Name="treeView" BorderThickness="0" >
+                    <TreeViewItem x:Name="BankItem" ItemsSource="{Binding Deps}" Background="Transparent">
+                        <TreeViewItem.Header>
+                            <StackPanel Orientation="Horizontal" >
+                                <Image Width = "20" Height = "20" Source="/Bank.png"/>
+                                <TextBox VerticalAlignment="Center" BorderThickness="0" Background="Transparent" Foreground="#FFAEE4DD" Margin="5,0,0,0"
+                                     Text="{Binding BankName, UpdateSourceTrigger=PropertyChanged}" />
+                            </StackPanel>
+                        </TreeViewItem.Header>
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="PreviewMouseDown">
+                                <i:InvokeCommandAction Command="{Binding DepsCommand}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                        <TreeViewItem.ItemTemplate>
+                            <DataTemplate>
+                                <TreeViewItem x:Name="depItem" ItemsSource="{Binding Clients}" >
+                                    <TreeViewItem.Header>
+                                        <StackPanel Orientation="Horizontal" Margin="0,2">
+                                            <Image Width = "20" Height = "20" Source="/Department.png"/>
+                                            <TextBlock VerticalAlignment="Center" Text="{Binding Name}" Foreground="#FFAEE4DD" Margin="5,0,0,0" />
+                                        </StackPanel>
+                                    </TreeViewItem.Header>
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="PreviewMouseDown">
+                                            <i:InvokeCommandAction 
+                                                Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type local:MainWindow}},
+                                                Path=DataContext.DepClientsCommand}" 
+                                                CommandParameter="{Binding ElementName=depItem, Path=DataContext}"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                    <TreeViewItem.ItemTemplate>
+                                        <DataTemplate>
+                                            <TreeViewItem x:Name="clientItem" ItemsSource="{Binding Accounts}" >
+                                                <TreeViewItem.Header>
+                                                    <StackPanel Orientation="Horizontal" Margin="0,2">
+                                                        <Image Width = "24" Height = "24" Source="/Client.png"/>
+                                                        <TextBlock VerticalAlignment="Center" Text="{Binding Name}" Margin="5,0,0,0" Foreground="#FFAEE4DD" />
+                                                    </StackPanel>
+                                                </TreeViewItem.Header>
+                                                <i:Interaction.Triggers>
+                                                    <i:EventTrigger EventName="PreviewMouseDown">
+                                                        <i:InvokeCommandAction 
+                                                            Command="{Binding RelativeSource = {RelativeSource Mode = FindAncestor, AncestorType = {x:Type local:MainWindow}}, 
+                                                            Path = DataContext.ClientAccountsCommand}" 
+                                                            CommandParameter="{Binding ElementName=clientItem, Path=DataContext}"/>
+                                                    </i:EventTrigger>
+                                                </i:Interaction.Triggers>
+                                                <TreeViewItem.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <TreeViewItem x:Name="accItem" >
+                                                            <TreeViewItem.Header>
+                                                                <StackPanel Orientation="Horizontal" Margin="0,2">
+                                                                    <Image Width = "20" Height = "20" Source="/Account.png"/>
+                                                                    <TextBlock VerticalAlignment="Center" Text="{Binding Number}" Margin="5,0,0,0" Foreground="#FFAEE4DD"/>
+                                                                </StackPanel>
+                                                            </TreeViewItem.Header>
+                                                        </TreeViewItem>
+                                                    </DataTemplate>
+                                                </TreeViewItem.ItemTemplate>
+                                            </TreeViewItem>
+                                        </DataTemplate>
+                                    </TreeViewItem.ItemTemplate>
+                                </TreeViewItem>
+                            </DataTemplate>
+                        </TreeViewItem.ItemTemplate>
+                    </TreeViewItem>
+                </TreeView>
+            </DockPanel>
+        </Grid>
+        <Grid>
+            <ContentControl Content="{Binding ViewModel}">
+                <ContentControl.Resources>
+                    <DataTemplate DataType="{x:Type viewmodels:BankNameViewModel}">
+                        <local1:BankNameControl/>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type viewmodels:ClientsViewModel}" >
+                        <local1:ClientsControl/>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type viewmodels:AccountsViewModel}" >
+                        <local1:AccountsControl/>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type viewmodels:DepsViewModel}" >
+                        <local1:DepsControl/>
+                    </DataTemplate>
+                </ContentControl.Resources>
+            </ContentControl>
+        </Grid>
+    </DockPanel>
+</Window>
