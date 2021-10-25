@@ -43,9 +43,9 @@
                 <i:EventTrigger EventName="BeginningEdit">
                     <i:InvokeCommandAction Command="{Binding BeginningEdit}" CommandParameter="{Binding ElementName=clientsGrid}"/>
                 </i:EventTrigger>
-                <!--<i:EventTrigger EventName="AddingNewItem">
+                <i:EventTrigger EventName="AddingNewItem">
                     <i:InvokeCommandAction Command="{Binding ClientAddedCommand}" CommandParameter="{Binding ElementName=clientsGrid}"/>
-                </i:EventTrigger>-->
+                </i:EventTrigger>
             </i:Interaction.Triggers>
         </DataGrid>
     </Grid>

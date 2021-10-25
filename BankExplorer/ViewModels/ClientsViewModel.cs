@@ -25,8 +25,9 @@ namespace BankExplorer.ViewModels
         private RelayCommand removeClientCommand;
         private RelayCommand endClientEditCommand;
         private RelayCommand addClientCommand;
-        //private RelayCommand clientAddedCommand;
+        private RelayCommand clientAddedCommand;
         private RelayCommand beginningEdit;
+        private Department department;
         #endregion
         #region Properties
         public DataContext Context { get; set; }
@@ -34,7 +35,7 @@ namespace BankExplorer.ViewModels
         /// Устанавливает и возвращает ссылку на текущий источник данных в таблице. 
         /// </summary>
         public ObservableCollection<Client> DataSource { get; set; }
-        public Department Department { get; set; }
+        public Department Department { get => department; set { department = value; RaisePropertyChanged(nameof(Department)); } }
         public string DepName => Department?.Name;
         public Visibility RemoveVisibility { get => removeVisibility; set { removeVisibility = value; RaisePropertyChanged(nameof(RemoveVisibility)); } }
         //public ObservableCollection<Client> Clients { get => Department?.Clients; }
@@ -42,28 +43,35 @@ namespace BankExplorer.ViewModels
         public Client Client { get => client; set { client = value; RaisePropertyChanged(nameof(Client)); } }
         public ICommand SelCommand => selCommand ??= new RelayCommand((e) =>
         {
-            if (added)
-            {
-                toAdd = added = false;
-                (e as DataGrid).CanUserAddRows = false;
-            }
+            //if (added)
+            //{
+            //    toAdd = added = false;
+            //    (e as DataGrid).CanUserAddRows = false;
+            //}
             Client = (e as DataGrid).SelectedItem is Client client ? client : null;
             RemoveVisibility = Client != null ? Visibility.Visible : Visibility.Collapsed;
         });
         public ICommand RemoveClientCommand => removeClientCommand ??= new RelayCommand(RemoveClient);
         public ICommand EndClientEditCommand => endClientEditCommand ??= new RelayCommand((e) =>
         {
-            if (toAdd)
+            //if (toAdd)
+            //{
+            //    //added = true;
+            //    MainViewModel.Log($"Добавили клиента {client}.");
+            //    Department.Clients.Add(client);
+            //    //Clients.Add(client);
+            //    //Department.Clients.Add(client);
+            //    //RaisePropertyChanged(nameof(DataSource));
+            //    //                DataSource.Add(client);
+            //    //MessageBox.Show($"Добавляем {client}");
+            //    //Context.SaveChanges();
+            //}
+            if (Client.Dep == null)
             {
-                added = true;
-                MainViewModel.Log($"Добавили клиента {client}.");
-                Department.Clients.Add(client);
-                //Clients.Add(client);
                 //Department.Clients.Add(client);
-                //RaisePropertyChanged(nameof(DataSource));
-                //                DataSource.Add(client);
-                //MessageBox.Show($"Добавляем {client}");
-                //Context.SaveChanges();
+                Client.Dep = Department;
+                //RaisePropertyChanged(nameof(Department));
+                MainViewModel.Log($"Добавили клиента {client}.");
             }
             else
             {
@@ -77,11 +85,11 @@ namespace BankExplorer.ViewModels
         });
         public ICommand AddClientCommand => addClientCommand ??= new RelayCommand((e) =>
         {
-            toAdd = true;// Собираемся добавить нового клиента
+            //toAdd = true;// Собираемся добавить нового клиента
             AddVisibility = Visibility.Collapsed;
             (e as DataGrid).CanUserAddRows = true;
         });
-        //public ICommand ClientAddedCommand => clientAddedCommand ??= new RelayCommand(ClientAdded);
+        public ICommand ClientAddedCommand => clientAddedCommand ??= new RelayCommand(ClientAdded);
         public ICommand BeginningEdit => beginningEdit ??= new RelayCommand((e) => AddVisibility = Visibility.Collapsed);
         #endregion
         //public ClientsViewModel()
@@ -91,7 +99,8 @@ namespace BankExplorer.ViewModels
         {
             Context = context; Department = department;
             //Context.Clients.Load();
-            DataSource = new ObservableCollection<Client>(Context.Clients.Local.ToObservableCollection().Where((e) => e.Dep == Department));
+            DataSource = Department.Clients;
+            //new ObservableCollection<Client>(Context.Clients.Local.ToObservableCollection().Where((e) => e.Dep == Department));
         }
         private void RemoveClient(object e)
         {
@@ -110,10 +119,10 @@ namespace BankExplorer.ViewModels
                 MainViewModel.Log($"Удален клиент {client}");
             }
         }
-        //private void ClientAdded(object e)
-        //{
-        //    (e as DataGrid).CanUserAddRows = false;
-        //    MainViewModel.Log($"В отдел добавлен новый клиент.");
-        //}
+        private void ClientAdded(object e)
+        {
+            (e as DataGrid).CanUserAddRows = false;
+            MainViewModel.Log($"В отдел добавлен новый клиент.");
+        }
     }
 }

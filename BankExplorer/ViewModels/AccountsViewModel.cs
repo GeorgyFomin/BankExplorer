@@ -33,6 +33,7 @@ namespace BankExplorer.ViewModels
         private RelayCommand accountAddingCommand;
         private RelayCommand showTargetTransferAccountCommand;
         private RelayCommand accountBeginningEditCommand;
+        private Client sourceTransferClient;
         #endregion
         #region Properties
         public DataContext Context { get; set; }
@@ -40,7 +41,7 @@ namespace BankExplorer.ViewModels
         /// Устанавливает и возвращает ссылку на текущий источник данных в таблице. 
         /// </summary>
         public ObservableCollection<Account> DataSource { get; set; }
-        public Client SourceTransferClient { get; set; }
+        public Client SourceTransferClient { get => sourceTransferClient; set { sourceTransferClient = value; RaisePropertyChanged(nameof(Client)); } }
         public ObservableCollection<Account> AllAccounts
         {
             get
@@ -83,9 +84,12 @@ namespace BankExplorer.ViewModels
         {
             if (SourceTransferAccount.Client == null)
             {
-                SourceTransferClient.Accounts.Add(SourceTransferAccount);
-                RaisePropertyChanged(nameof(SourceTransferClient));
+                SourceTransferAccount.Client = sourceTransferClient;
+                //SourceTransferClient.Accounts.Add(SourceTransferAccount);
+                //SourceTransferAccounts.Add(SourceTransferAccount);
+                //RaisePropertyChanged(nameof(SourceTransferClient));
                 //MessageBox.Show("Добавлен счет");
+                MainViewModel.Log($"Клиенту{SourceTransferClient} добавлен счет {SourceTransferAccount}.");
             }
             MenuItemAccountAddVisibility = Visibility.Visible;
             MainViewModel.Log($"Поля счета {SourceTransferAccount} клиента {SourceTransferClient} отредактированы.");
@@ -109,7 +113,8 @@ namespace BankExplorer.ViewModels
         public AccountsViewModel(DataContext context, Client client)
         {
             Context = context; SourceTransferClient = client;
-            DataSource = new ObservableCollection<Account>(Context.Accounts.Local.ToObservableCollection().Where((e) => e.Client == SourceTransferClient));
+            DataSource = SourceTransferClient.Accounts;
+            //new ObservableCollection<Account>(Context.Accounts.Local.ToObservableCollection().Where((e) => e.Client == SourceTransferClient));
         }
         #region Handlers
         private void RemoveAccount(object e)
