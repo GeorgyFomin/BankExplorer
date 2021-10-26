@@ -3,7 +3,7 @@ using System.Windows.Input;
 
 namespace BankExplorer.Commands
 {
-    class RelayCommand : ICommand
+    public class RelayCommand : ICommand
     {
         /// <summary>
         /// Хранит ссылку на делегат, содержащий код действия, определенного для данного объекта-команды.
@@ -11,7 +11,7 @@ namespace BankExplorer.Commands
         private readonly Action<object> action;
 
         /// <summary>
-        /// Хпранит ссылку на метод, определяющий может ли команда быть выполненной.
+        /// Хранит ссылку на метод, определяющий может ли команда быть выполненной.
         /// </summary>
         private readonly Func<object, bool> canExecute;
         /// <summary>

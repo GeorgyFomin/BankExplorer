@@ -17,7 +17,6 @@ namespace BankExplorer.ViewModels
     public class ClientsViewModel : ViewModelBase
     {
         #region Fields
-        private bool added, toAdd;
         private Client client;
         private Visibility removeVisibility = Visibility.Collapsed;
         private Visibility addVisibility = Visibility.Visible;
@@ -38,46 +37,25 @@ namespace BankExplorer.ViewModels
         public Department Department { get => department; set { department = value; RaisePropertyChanged(nameof(Department)); } }
         public string DepName => Department?.Name;
         public Visibility RemoveVisibility { get => removeVisibility; set { removeVisibility = value; RaisePropertyChanged(nameof(RemoveVisibility)); } }
-        //public ObservableCollection<Client> Clients { get => Department?.Clients; }
         public Visibility AddVisibility { get => addVisibility; set { addVisibility = value; RaisePropertyChanged(nameof(AddVisibility)); } }
         public Client Client { get => client; set { client = value; RaisePropertyChanged(nameof(Client)); } }
         public ICommand SelCommand => selCommand ??= new RelayCommand((e) =>
         {
-            //if (added)
-            //{
-            //    toAdd = added = false;
-            //    (e as DataGrid).CanUserAddRows = false;
-            //}
             Client = (e as DataGrid).SelectedItem is Client client ? client : null;
             RemoveVisibility = Client != null ? Visibility.Visible : Visibility.Collapsed;
         });
         public ICommand RemoveClientCommand => removeClientCommand ??= new RelayCommand(RemoveClient);
         public ICommand EndClientEditCommand => endClientEditCommand ??= new RelayCommand((e) =>
         {
-            //if (toAdd)
-            //{
-            //    //added = true;
-            //    MainViewModel.Log($"Добавили клиента {client}.");
-            //    Department.Clients.Add(client);
-            //    //Clients.Add(client);
-            //    //Department.Clients.Add(client);
-            //    //RaisePropertyChanged(nameof(DataSource));
-            //    //                DataSource.Add(client);
-            //    //MessageBox.Show($"Добавляем {client}");
-            //    //Context.SaveChanges();
-            //}
             if (Client.Dep == null)
             {
-                //Department.Clients.Add(client);
                 Client.Dep = Department;
-                //RaisePropertyChanged(nameof(Department));
-                MainViewModel.Log($"Добавили клиента {client}.");
+                MainViewModel.Log($"В отдел {department} добавили клиента.");
+                //MessageBox.Show($"В отдел {department} добавили клиента {client}.");
             }
             else
             {
                 MainViewModel.Log($"Имя клиента {client} отредактировано.");
-                //MessageBox.Show($"Редактируем {client}");
-                //RaisePropertyChanged(nameof(Client));
             }
             AddVisibility = Visibility.Visible;
 
@@ -85,22 +63,16 @@ namespace BankExplorer.ViewModels
         });
         public ICommand AddClientCommand => addClientCommand ??= new RelayCommand((e) =>
         {
-            //toAdd = true;// Собираемся добавить нового клиента
             AddVisibility = Visibility.Collapsed;
             (e as DataGrid).CanUserAddRows = true;
         });
         public ICommand ClientAddedCommand => clientAddedCommand ??= new RelayCommand(ClientAdded);
         public ICommand BeginningEdit => beginningEdit ??= new RelayCommand((e) => AddVisibility = Visibility.Collapsed);
         #endregion
-        //public ClientsViewModel()
-        //{
-        //}
         public ClientsViewModel(DataContext context, Department department)
         {
             Context = context; Department = department;
-            //Context.Clients.Load();
             DataSource = Department.Clients;
-            //new ObservableCollection<Client>(Context.Clients.Local.ToObservableCollection().Where((e) => e.Dep == Department));
         }
         private void RemoveClient(object e)
         {
@@ -121,8 +93,7 @@ namespace BankExplorer.ViewModels
         }
         private void ClientAdded(object e)
         {
-            (e as DataGrid).CanUserAddRows = false;
-            MainViewModel.Log($"В отдел добавлен новый клиент.");
+            //(e as DataGrid).CanUserAddRows = false;
         }
     }
 }
