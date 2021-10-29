@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Input;
 
 namespace BankExplorer.ViewModels
@@ -34,8 +35,11 @@ namespace BankExplorer.ViewModels
         private RelayCommand resetBankCommand;
         private RelayCommand depClientsCommand;
         private RelayCommand clientAccountsCommand;
+        private ObservableCollection<Department> deps;
+        //private CollectionViewSource depsViewSource = new();
         #endregion
         #region Properties
+        //public CollectionViewSource DepsViewSource { get => depsViewSource; set { depsViewSource = value; RaisePropertyChanged(nameof(DepsViewSource)); } }
         public ViewModelBase ViewModel { get => viewModel; set { viewModel = value; RaisePropertyChanged(nameof(ViewModel)); } }
         public ICommand DragCommand => dragCommand ??= new RelayCommand((e) => (e as MainWindow).DragMove());
         public ICommand MinimizeCommand => minimizeCommand ??= new RelayCommand((e) => (e as MainWindow).WindowState = WindowState.Minimized);
@@ -47,7 +51,8 @@ namespace BankExplorer.ViewModels
         });
         public ICommand CloseCommand => closeCommand ??= new RelayCommand((e) =>
         {
-            context.SaveChanges();
+            //context.SaveChanges();
+            context.Dispose();
             (e as MainWindow).Close();
         });
         public ICommand ResetBankCommand => resetBankCommand ??= new RelayCommand((e) => ResetBank());
@@ -62,9 +67,9 @@ namespace BankExplorer.ViewModels
         #endregion
         private void ClearTables()
         {
-            foreach (Account loan in context.Accounts)
+            foreach (Account account in context.Accounts)
             {
-                context.Accounts.Remove(loan);
+                context.Accounts.Remove(account);
             }
             foreach (Client client in context.Clients)
             {
@@ -89,7 +94,6 @@ namespace BankExplorer.ViewModels
             }
             context.SaveChanges();
         }
-        private ObservableCollection<Department> deps;
         public ObservableCollection<Department> Deps { get => deps; set { deps = value; RaisePropertyChanged(nameof(Deps)); } }
         private string bankName;
         public string BankName { get => bankName; set { bankName = value; RaisePropertyChanged(nameof(BankName)); } }
@@ -101,6 +105,7 @@ namespace BankExplorer.ViewModels
             ViewModel = new BankNameViewModel() { BankName = BankName };
             Log($"Создан банк {BankName}.");
             Deps = context.Departments.Local.ToObservableCollection();
+            //DepsViewSource.Source = context.Departments.Local.ToObservableCollection();
         }
         public MainViewModel()
         {

@@ -26,7 +26,7 @@ namespace Domain.Model
         /// Устанавливает и возвращает флаг капитализации вклада.
         /// </summary>
         public bool Cap { get; set; }
-        public Client Client { get; set; }
+        public virtual Client Client { get; set; }
         #endregion
         public Account() => Number = GetHashCode();
         public string AccFields() => $"{Number,-16}{Size,-16:n}\t{Rate:g3}\t{Cap}";
@@ -48,7 +48,7 @@ namespace Domain.Model
         /// <param name="tw"></param>
         public void Print(TextWriter tw) => tw.WriteLine(this);
         #endregion
-        public override string ToString() => 
+        public override string ToString() =>
             (Client != null ? Client.ToString() : string.Empty) + ";" + (Size < 0 ? "Loan " : "Deposit ") + $"№{Number};Size {Size:C2};Rate {Rate:g3};Cap {Cap}";
     }
 }

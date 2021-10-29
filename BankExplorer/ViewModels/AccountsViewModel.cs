@@ -17,6 +17,7 @@ namespace BankExplorer.ViewModels
     public class AccountsViewModel : ViewModelBase
     {
         #region Fields
+        private bool endEditFlag;
         private Account sourceTransferAccount;
         private Account targetTransferAccount;
         private Visibility rightPanelVisibility = Visibility.Hidden;
@@ -34,13 +35,14 @@ namespace BankExplorer.ViewModels
         private RelayCommand showTargetTransferAccountCommand;
         private RelayCommand accountBeginningEditCommand;
         private Client sourceTransferClient;
+        private ObservableCollection<Account> dataSource;
         #endregion
         #region Properties
         public DataContext Context { get; set; }
         /// <summary>
         /// Устанавливает и возвращает ссылку на текущий источник данных в таблице. 
         /// </summary>
-        public ObservableCollection<Account> DataSource { get; set; }
+        public ObservableCollection<Account> DataSource { get => dataSource; set { dataSource = value; RaisePropertyChanged(nameof(DataSource)); } }
         public Client SourceTransferClient { get => sourceTransferClient; set { sourceTransferClient = value; RaisePropertyChanged(nameof(Client)); } }
         public ObservableCollection<Account> AllAccounts
         {
@@ -78,19 +80,27 @@ namespace BankExplorer.ViewModels
             }
         }
         public ICommand AccountSelectionChangedCommand => accountSelectionChangedCommand ??= new RelayCommand((e) =>
-        MenuItemsVisibility = (SourceTransferAccount = (e as DataGrid).SelectedItem is Account account ? account : null) != null ? Visibility.Visible : Visibility.Collapsed);
+        {
+            if (endEditFlag)
+            {
+                Context.SaveChanges();
+                endEditFlag = false;
+            }
+            MenuItemsVisibility = (SourceTransferAccount = (e as DataGrid).SelectedItem is Account account ? account : null) != null ? Visibility.Visible : Visibility.Collapsed;
+        });
         public ICommand RemoveAccCommand => removeAccCommand ??= new RelayCommand(RemoveAccount);
         public ICommand AccountEditEndingCommand => accountEditEndingCommand ??= new RelayCommand((e) =>
         {
+            endEditFlag = true;
             if (SourceTransferAccount.Client == null)
             {
                 SourceTransferAccount.Client = sourceTransferClient;
-                //SourceTransferClient.Accounts.Add(SourceTransferAccount);
-                //SourceTransferAccounts.Add(SourceTransferAccount);
-                //RaisePropertyChanged(nameof(SourceTransferClient));
                 //MessageBox.Show("Добавлен счет");
                 MainViewModel.Log($"Клиенту{SourceTransferClient} добавлен счет {SourceTransferAccount}.");
             }
+            else
+                MessageBox.Show("Счет отредактирован");
+
             MenuItemAccountAddVisibility = Visibility.Visible;
             MainViewModel.Log($"Поля счета {SourceTransferAccount} клиента {SourceTransferClient} отредактированы.");
         });

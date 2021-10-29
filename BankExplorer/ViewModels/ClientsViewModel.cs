@@ -27,13 +27,15 @@ namespace BankExplorer.ViewModels
         private RelayCommand clientAddedCommand;
         private RelayCommand beginningEdit;
         private Department department;
+        private ObservableCollection<Client> dataSource;
+        private bool endEditFlag;
         #endregion
         #region Properties
         public DataContext Context { get; set; }
         /// <summary>
         /// Устанавливает и возвращает ссылку на текущий источник данных в таблице. 
         /// </summary>
-        public ObservableCollection<Client> DataSource { get; set; }
+        public ObservableCollection<Client> DataSource { get => dataSource; set { dataSource = value; RaisePropertyChanged(nameof(DataSource)); } }
         public Department Department { get => department; set { department = value; RaisePropertyChanged(nameof(Department)); } }
         public string DepName => Department?.Name;
         public Visibility RemoveVisibility { get => removeVisibility; set { removeVisibility = value; RaisePropertyChanged(nameof(RemoveVisibility)); } }
@@ -41,17 +43,23 @@ namespace BankExplorer.ViewModels
         public Client Client { get => client; set { client = value; RaisePropertyChanged(nameof(Client)); } }
         public ICommand SelCommand => selCommand ??= new RelayCommand((e) =>
         {
+            if (endEditFlag)
+            {
+                Context.SaveChanges();
+                endEditFlag = false;
+            }
             Client = (e as DataGrid).SelectedItem is Client client ? client : null;
             RemoveVisibility = Client != null ? Visibility.Visible : Visibility.Collapsed;
         });
         public ICommand RemoveClientCommand => removeClientCommand ??= new RelayCommand(RemoveClient);
         public ICommand EndClientEditCommand => endClientEditCommand ??= new RelayCommand((e) =>
         {
+            endEditFlag = true;
             if (Client.Dep == null)
             {
                 Client.Dep = Department;
                 MainViewModel.Log($"В отдел {department} добавили клиента.");
-                //MessageBox.Show($"В отдел {department} добавили клиента {client}.");
+                //MessageBox.Show($"В отдел {department} добавили клиента.");
             }
             else
             {
@@ -59,7 +67,6 @@ namespace BankExplorer.ViewModels
             }
             AddVisibility = Visibility.Visible;
 
-            //Context.SaveChanges();
         });
         public ICommand AddClientCommand => addClientCommand ??= new RelayCommand((e) =>
         {
@@ -73,6 +80,7 @@ namespace BankExplorer.ViewModels
         {
             Context = context; Department = department;
             DataSource = Department.Clients;
+            //DataSource = new ObservableCollection<Client>(Context.Clients.Where(p => p.Dep == Department));
         }
         private void RemoveClient(object e)
         {
@@ -93,7 +101,17 @@ namespace BankExplorer.ViewModels
         }
         private void ClientAdded(object e)
         {
-            //(e as DataGrid).CanUserAddRows = false;
+            (e as DataGrid).CanUserAddRows = false;
         }
+
+        //private RelayCommand saveClick;
+        //public ICommand SaveClick => saveClick ??= new RelayCommand(PerformSaveClick);
+
+        //private void PerformSaveClick(object e)
+        //{
+        //    DataGrid grid = e as DataGrid;
+        //    Context.SaveChanges();
+        //    grid.Items.Refresh();
+        //}
     }
 }

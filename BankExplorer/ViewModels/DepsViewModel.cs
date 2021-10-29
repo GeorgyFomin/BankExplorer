@@ -16,6 +16,7 @@ namespace BankExplorer.ViewModels
     {
         #region Fields
         private bool added, toAdd;
+        private bool endEditFlag;
         private Department dep;
         private Visibility removeVisibilty = Visibility.Collapsed;
         private RelayCommand selCommand;
@@ -37,6 +38,11 @@ namespace BankExplorer.ViewModels
         public Visibility AddVisibility { get => addVisibility; set { addVisibility = value; RaisePropertyChanged(nameof(AddVisibility)); } }
         public ICommand SelCommand => selCommand ??= new RelayCommand((e) =>
         {
+            if (endEditFlag)
+            {
+                Context.SaveChanges();
+                endEditFlag = false;
+            }
             if (added)
             {
                 toAdd = added = false;
@@ -48,6 +54,7 @@ namespace BankExplorer.ViewModels
         public ICommand RemoveDepCommand => removeDepCommand ??= new RelayCommand(RemoveDep);
         public ICommand EndDepEditCommand => endDepEditCommand ??= new RelayCommand((e) =>
         {
+            endEditFlag = true;
             if (toAdd)
             {
                 added = true;

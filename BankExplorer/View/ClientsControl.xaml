@@ -12,6 +12,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition />
         </Grid.RowDefinitions>
+        <!--<Button Content="Save" Command="{Binding SaveClick}" CommandParameter="{Binding ElementName=clientsGrid}"/>-->
         <StackPanel x:Name="panel" Orientation="Horizontal">
             <TextBlock Text="Clients Of Department" FontSize="20"/>
             <TextBlock Text="{Binding DepName}" FontSize="20" Margin="5,0,0,0" FontStyle="Italic" FontWeight="Medium" 
@@ -19,7 +20,7 @@
         </StackPanel>
         <DataGrid RowHeaderStyle="{StaticResource BlackNavy}" x:Name="clientsGrid" Grid.Row="1" ItemsSource="{Binding DataSource}" DataContext="{Binding Mode=OneWay}" 
                   AutoGenerateColumns="False" Style="{StaticResource ResourceKey=BlackNavy}" RowStyle="{StaticResource RowStyle}" 
-                  BorderThickness="0" CellStyle="{StaticResource CellStyle}">
+                  BorderThickness="0" CellStyle="{StaticResource CellStyle}" CanUserAddRows="False">
             <DataGrid.ContextMenu>
                 <ContextMenu Style="{StaticResource contextMenu}">
                     <MenuItem Header="Remove" Visibility="{Binding RemoveVisibility}" Command="{Binding RemoveClientCommand}" />
@@ -33,6 +34,9 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Name" Binding="{Binding Name}" EditingElementStyle="{StaticResource EditingCellTextBox}"/>
             </DataGrid.Columns>
+            <DataGrid.InputBindings>
+                <KeyBinding Key="Delete" Command="{Binding RemoveClientCommand}"/>
+            </DataGrid.InputBindings>
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="SelectionChanged">
                     <i:InvokeCommandAction Command="{Binding SelCommand}" CommandParameter="{Binding ElementName=clientsGrid}"/>

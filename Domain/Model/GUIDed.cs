@@ -8,8 +8,8 @@ namespace Domain.Model
     public class GUIDed
     {
         /// <summary>
-        /// Возвращает уникальный идентификатор.
+        /// Устанавливает и возвращает уникальный идентификатор.
         /// </summary>
-        public Guid ID { get; private set; } = Guid.NewGuid();
+        public Guid ID { get; set; }
     }
 }

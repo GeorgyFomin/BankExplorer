@@ -1,4 +1,6 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 
 namespace Domain.Model
@@ -12,7 +14,7 @@ namespace Domain.Model
         /// <summary>
         /// Устанавливает и возвращает ссылки на клиентов.
         /// </summary>
-        public ObservableCollection<Client> Clients
+        public virtual ObservableCollection<Client> Clients
         {
             get => clients; set
             {

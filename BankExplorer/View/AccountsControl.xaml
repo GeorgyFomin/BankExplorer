@@ -41,6 +41,9 @@
                 <DataGridTextColumn Header="Rate" Binding="{Binding Rate}" EditingElementStyle="{StaticResource EditingCellTextBox}"/>
                 <DataGridCheckBoxColumn Header="Cap" Binding="{Binding Cap}" EditingElementStyle="{StaticResource EditCheckboxStyle}" ElementStyle="{StaticResource ElementCheckBoxStyle}"/>
             </DataGrid.Columns>
+            <DataGrid.InputBindings>
+                <KeyBinding Key="Delete" Command="{Binding RemoveAccCommand}"/>
+            </DataGrid.InputBindings>
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="SelectionChanged">
                     <i:InvokeCommandAction Command="{Binding AccountSelectionChangedCommand}" CommandParameter="{Binding ElementName=accFromGrid}"/>

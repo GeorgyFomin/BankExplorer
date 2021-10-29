@@ -10,9 +10,10 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="437.021" Width="892" WindowStyle="None" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Window.Resources>
-        <Image x:Key="depIcon" x:Shared="false"  Source="/Department.png"/>
         <Image x:Key="clientIcon" x:Shared="false"  Source="/Client.png"/>
         <Image x:Key="accIcon" x:Shared="false"  Source="/Account.png"/>
+        <Image x:Key="bankIcon" x:Shared="false"  Source="/Bank.png"/>
+        <Image x:Key="depIcon" x:Shared="false"  Source="/Department.png"/>
     </Window.Resources>
     <DockPanel>
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" FlowDirection="RightToLeft" Background="{StaticResource mainBckgr}" Height="20" >
@@ -73,11 +74,6 @@
             <DockPanel>
                 <Menu Name="menu1" DockPanel.Dock="Top" Margin="10,10,10,10" Background="Transparent" Foreground="Yellow">
                     <MenuItem ItemsSource="{Binding Deps}">
-                        <MenuItem.ItemContainerStyle>
-                            <Style TargetType="{x:Type MenuItem}">
-                                <Setter Property="Icon" Value="{StaticResource depIcon}"/>
-                            </Style>
-                        </MenuItem.ItemContainerStyle>
                         <MenuItem.Icon>
                             <Image Source="/Bank.png">
                                 <i:Interaction.Triggers>
@@ -93,6 +89,11 @@
                             <TextBox VerticalAlignment="Bottom" Style="{StaticResource EditingCellTextBox}" BorderThickness="0" Background="Transparent"
                                              Text="{Binding BankName, UpdateSourceTrigger=PropertyChanged}" CaretBrush="Cyan"/>
                         </MenuItem.Header>
+                        <MenuItem.ItemContainerStyle>
+                            <Style TargetType="{x:Type MenuItem}">
+                                <Setter Property="Icon" Value="{StaticResource depIcon}"/>
+                            </Style>
+                        </MenuItem.ItemContainerStyle>
                         <MenuItem.ItemTemplate>
                             <HierarchicalDataTemplate x:Name="depMenuItem" ItemsSource="{Binding Clients}" >
                                 <TextBlock VerticalAlignment="Center" Text="{Binding Name}" Margin="5,0,5,0">
@@ -135,11 +136,13 @@
                                     </HierarchicalDataTemplate>
                                 </HierarchicalDataTemplate.ItemTemplate>
                             </HierarchicalDataTemplate>
+
                         </MenuItem.ItemTemplate>
                     </MenuItem>
                 </Menu>
                 <TreeView x:Name="treeView" BorderThickness="0" >
                     <TreeViewItem x:Name="BankItem" ItemsSource="{Binding Deps}" Background="Transparent">
+                        <!--Deps-->
                         <TreeViewItem.Header>
                             <StackPanel Orientation="Horizontal" >
                                 <Image Width = "20" Height = "20" Source="/Bank.png"/>
@@ -155,6 +158,7 @@
                         <TreeViewItem.ItemTemplate>
                             <DataTemplate>
                                 <TreeViewItem x:Name="depItem" ItemsSource="{Binding Clients}" >
+                                    <!--Clients-->
                                     <TreeViewItem.Header>
                                         <StackPanel Orientation="Horizontal" Margin="0,2">
                                             <Image Width = "20" Height = "20" Source="/Department.png"/>

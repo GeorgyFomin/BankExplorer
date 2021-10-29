@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.IO;
 
 namespace Domain.Model
@@ -9,11 +10,11 @@ namespace Domain.Model
         /// Хранит список вкладов.
         /// </summary>
         private ObservableCollection<Account> accounts = new();
-        public Department Dep { get; set; }
+        public virtual Department Dep { get; set; }
         /// <summary>
         /// Устанавливает и возвращает ссылки на счета клиента.
         /// </summary>
-        public ObservableCollection<Account> Accounts
+        public virtual ObservableCollection<Account> Accounts
         {
             get => accounts; set
             {
