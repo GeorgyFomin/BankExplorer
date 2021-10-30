@@ -10,10 +10,10 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="437.021" Width="892" WindowStyle="None" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Window.Resources>
-        <Image x:Key="clientIcon" x:Shared="false"  Source="/Client.png"/>
-        <Image x:Key="accIcon" x:Shared="false"  Source="/Account.png"/>
-        <Image x:Key="bankIcon" x:Shared="false"  Source="/Bank.png"/>
         <Image x:Key="depIcon" x:Shared="false"  Source="/Department.png"/>
+        <Image x:Key="accIcon" x:Shared="false"  Source="/Account.jpg"/>
+        <Image x:Key="bankIcon" x:Shared="false"  Source="/Bank.png"/>
+        <Image x:Key="clientIcon" x:Shared="false"  Source="/Client.jpg"/>
     </Window.Resources>
     <DockPanel>
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" FlowDirection="RightToLeft" Background="{StaticResource mainBckgr}" Height="20" >
@@ -175,10 +175,10 @@
                                     </i:Interaction.Triggers>
                                     <TreeViewItem.ItemTemplate>
                                         <DataTemplate>
-                                            <TreeViewItem x:Name="clientItem" ItemsSource="{Binding Accounts}" >
+                                            <TreeViewItem x:Name="clientItem" ItemsSource="{Binding Accounts}">
                                                 <TreeViewItem.Header>
                                                     <StackPanel Orientation="Horizontal" Margin="0,2">
-                                                        <Image Width = "24" Height = "24" Source="/Client.png"/>
+                                                        <Image Width = "24" Height = "24" Source="/Client.jpg"/>
                                                         <TextBlock VerticalAlignment="Center" Text="{Binding Name}" Margin="5,0,0,0" Foreground="#FFAEE4DD" />
                                                     </StackPanel>
                                                 </TreeViewItem.Header>
@@ -195,7 +195,7 @@
                                                         <TreeViewItem x:Name="accItem" >
                                                             <TreeViewItem.Header>
                                                                 <StackPanel Orientation="Horizontal" Margin="0,2">
-                                                                    <Image Width = "20" Height = "20" Source="/Account.png"/>
+                                                                    <Image Width = "20" Height = "20" Source="/Account.jpg"/>
                                                                     <TextBlock VerticalAlignment="Center" Text="{Binding Number}" Margin="5,0,0,0" Foreground="#FFAEE4DD"/>
                                                                 </StackPanel>
                                                             </TreeViewItem.Header>

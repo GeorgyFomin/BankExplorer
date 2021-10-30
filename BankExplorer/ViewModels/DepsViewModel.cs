@@ -1,11 +1,6 @@
 ﻿using BankExplorer.Commands;
 using Domain.Model;
 using Persistance.Conext;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -15,16 +10,17 @@ namespace BankExplorer.ViewModels
     public class DepsViewModel : ViewModelBase
     {
         #region Fields
-        private bool added, toAdd;
+        /// <summary>
+        /// Хранит флаг завершения редактирования или добавления отдела в таблицу.
+        /// </summary>
         private bool endEditFlag;
-        private Department dep;
-        private Visibility removeVisibilty = Visibility.Collapsed;
+        /// <summary>
+        /// Хранит ссылку на выделенный отдел.
+        /// </summary>
+        private Department selDep;
         private RelayCommand selCommand;
         private RelayCommand removeDepCommand;
         private RelayCommand endDepEditCommand;
-        private RelayCommand addDepCommand;
-        private Visibility addVisibility = Visibility.Visible;
-        private RelayCommand beginEdit;
         #endregion
         #region Properties
         public string BankName { get; set; }
@@ -33,54 +29,33 @@ namespace BankExplorer.ViewModels
         /// Устанавливает и возвращает ссылку на текущий источник данных в таблице. 
         /// </summary>
         public object DataSource { get; set; }
-        public Department Dep { get => dep; set { dep = value; RaisePropertyChanged(nameof(Dep)); } }
-        public Visibility RemoveVisibility { get => removeVisibilty; set { removeVisibilty = value; RaisePropertyChanged(nameof(RemoveVisibility)); } }
-        public Visibility AddVisibility { get => addVisibility; set { addVisibility = value; RaisePropertyChanged(nameof(AddVisibility)); } }
-        public ICommand SelCommand => selCommand ??= new RelayCommand((e) =>
+        public Department SelDep { get => selDep; set { selDep = value; RaisePropertyChanged(nameof(SelDep)); } }
+        public ICommand SelCommand => selCommand ??= new RelayCommand(SelectDepartment);
+        public ICommand RemoveDepCommand => removeDepCommand ??= new RelayCommand(RemoveDepartmnet);
+        public ICommand EndDepEditCommand => endDepEditCommand ??= new RelayCommand(EndEditDepartment);
+        #endregion
+        private void SelectDepartment(object e)
         {
             if (endEditFlag)
             {
                 Context.SaveChanges();
                 endEditFlag = false;
             }
-            if (added)
-            {
-                toAdd = added = false;
-                (e as DataGrid).CanUserAddRows = false;
-            }
-            Dep = (e as DataGrid).SelectedItem is Department dep ? dep : null;
-            RemoveVisibility = Dep != null ? Visibility.Visible : Visibility.Collapsed;
-        });
-        public ICommand RemoveDepCommand => removeDepCommand ??= new RelayCommand(RemoveDep);
-        public ICommand EndDepEditCommand => endDepEditCommand ??= new RelayCommand((e) =>
+            SelDep = (e as DataGrid).SelectedItem is Department dep ? dep : null;
+            if (SelDep == null)
+                MainViewModel.Log($"Добавили отдел.");
+        }
+        private void EndEditDepartment(object e)
         {
             endEditFlag = true;
-            if (toAdd)
-            {
-                added = true;
-                MainViewModel.Log($"Добавили отдел {dep}.");
-            }
-            else
-            {
-                MainViewModel.Log($"Имя отдела {dep} отредактировано.");
-            }
-            AddVisibility = Visibility.Visible;
-        });
-        public ICommand AddDepCommand => addDepCommand ??= new RelayCommand((e) =>
+            MainViewModel.Log($"Имя отдела {selDep} отредактировано.");
+        }
+        private void RemoveDepartmnet(object obj)
         {
-            toAdd = true;// Собираемся добавить новый отдел
-            AddVisibility = Visibility.Collapsed;
-            (e as DataGrid).CanUserAddRows = true;
-        });
-        public ICommand BeginEdit => beginEdit ??= new RelayCommand((e) => AddVisibility = Visibility.Collapsed);
-        #endregion
-        public DepsViewModel() { }
-        private void RemoveDep(object obj)
-        {
-            if (dep != null &&
-                MessageBox.Show($"Удалить отдел {dep}?", $"Удаление отдела {dep}", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            if (selDep != null &&
+                MessageBox.Show($"Удалить отдел {selDep}?", $"Удаление отдела {selDep}", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                foreach (Client client in dep.Clients)
+                foreach (Client client in selDep.Clients)
                 {
                     foreach (Account account in client.Accounts)
                     {
@@ -88,9 +63,9 @@ namespace BankExplorer.ViewModels
                     }
                     Context.Clients.Remove(client);
                 }
-                Context.Departments.Remove(dep);
+                Context.Departments.Remove(selDep);
                 Context.SaveChanges();
-                MainViewModel.Log($"Удален отдел {dep}");
+                MainViewModel.Log($"Удален отдел {selDep}");
             }
         }
     }

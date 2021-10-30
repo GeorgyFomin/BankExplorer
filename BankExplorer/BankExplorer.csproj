@@ -7,11 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Bank.png" />
-    <None Remove="Department.png" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="FontAwesome.Sharp" Version="5.15.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.11" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.11">
@@ -28,7 +23,9 @@
 
   <ItemGroup>
     <Resource Include="Bank.png" />
+    <Resource Include="Client.jpg" />
     <Resource Include="Department.png" />
+    <Resource Include="Account.jpg" />
   </ItemGroup>
 
 </Project>

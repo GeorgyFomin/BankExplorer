@@ -20,20 +20,23 @@
         </StackPanel>
         <DataGrid RowHeaderStyle="{StaticResource BlackNavy}" Grid.Row="1" x:Name="depsGrid" DataContext="{Binding Mode=OneWay}" ItemsSource="{Binding DataSource}" 
                   AutoGenerateColumns="False" Style="{StaticResource ResourceKey=BlackNavy}" RowStyle="{StaticResource RowStyle}" 
-                  BorderThickness="0" CellStyle="{StaticResource CellStyle}" CanUserAddRows="False">
-            <DataGrid.ContextMenu>
+                  BorderThickness="0" CellStyle="{StaticResource CellStyle}" CanUserAddRows="True">
+            <!--<DataGrid.ContextMenu>
                 <ContextMenu Style="{StaticResource contextMenu}">
                     <MenuItem Header="Remove" Visibility="{Binding RemoveVisibility}" Command="{Binding RemoveDepCommand}"/>
                     <MenuItem Header="Add Department" Visibility="{Binding AddVisibility}" Command="{Binding AddDepCommand}" 
                               CommandParameter="{Binding PlacementTarget, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"/>
                 </ContextMenu>
-            </DataGrid.ContextMenu>
+            </DataGrid.ContextMenu>-->
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Name" Binding="{Binding Name}" EditingElementStyle="{StaticResource EditingCellTextBox}"/>
             </DataGrid.Columns>
             <DataGrid.ColumnHeaderStyle>
                 <Style BasedOn="{StaticResource ResourceKey=BlackNavy}"/>
             </DataGrid.ColumnHeaderStyle>
+            <DataGrid.InputBindings>
+                <KeyBinding Key="Delete" Command="{Binding RemoveDepCommand}"/>
+            </DataGrid.InputBindings>
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="SelectionChanged">
                     <i:InvokeCommandAction Command="{Binding SelCommand}" CommandParameter="{Binding ElementName=depsGrid}"/>
@@ -41,9 +44,9 @@
                 <i:EventTrigger EventName="CellEditEnding">
                     <i:InvokeCommandAction Command="{Binding EndDepEditCommand}" CommandParameter="{Binding ElementName=depsGrid}"/>
                 </i:EventTrigger>
-                <i:EventTrigger EventName="BeginningEdit">
+                <!--<i:EventTrigger EventName="BeginningEdit">
                     <i:InvokeCommandAction Command="{Binding BeginEdit}" CommandParameter="{Binding ElementName=depsGrid}"/>
-                </i:EventTrigger>
+                </i:EventTrigger>-->
             </i:Interaction.Triggers>
         </DataGrid>
     </Grid>
