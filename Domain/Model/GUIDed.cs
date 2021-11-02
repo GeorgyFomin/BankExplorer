@@ -10,6 +10,6 @@ namespace Domain.Model
         /// <summary>
         /// Устанавливает и возвращает уникальный идентификатор.
         /// </summary>
-        public Guid ID { get; set; }
+        public Guid ID { get; private set; } = Guid.NewGuid();
     }
 }

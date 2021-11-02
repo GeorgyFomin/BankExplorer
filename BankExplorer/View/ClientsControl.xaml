@@ -19,7 +19,7 @@
         </StackPanel>
         <DataGrid RowHeaderStyle="{StaticResource BlackNavy}" x:Name="clientsGrid" Grid.Row="1" ItemsSource="{Binding DataSource}" DataContext="{Binding Mode=OneWay}" 
                   AutoGenerateColumns="False" Style="{StaticResource ResourceKey=BlackNavy}" RowStyle="{StaticResource RowStyle}" 
-                  BorderThickness="0" CellStyle="{StaticResource CellStyle}" CanUserAddRows="True">
+                  BorderThickness="0" CellStyle="{StaticResource CellStyle}" CanUserAddRows="True" ColumnHeaderStyle="{StaticResource ResourceKey=BlackNavy}">
             <!--<DataGrid.ContextMenu>
                 <ContextMenu Style="{StaticResource contextMenu}">
                     <MenuItem Header="Remove" Visibility="{Binding RemoveVisibility}" Command="{Binding RemoveClientCommand}" />
@@ -27,9 +27,9 @@
                               CommandParameter="{Binding PlacementTarget, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"/>
                 </ContextMenu>
             </DataGrid.ContextMenu>-->
-            <DataGrid.ColumnHeaderStyle>
+            <!--<DataGrid.ColumnHeaderStyle>
                 <Style BasedOn="{StaticResource ResourceKey=BlackNavy}"/>
-            </DataGrid.ColumnHeaderStyle>
+            </DataGrid.ColumnHeaderStyle>-->
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Name" Binding="{Binding Name}" EditingElementStyle="{StaticResource EditingCellTextBox}"/>
             </DataGrid.Columns>

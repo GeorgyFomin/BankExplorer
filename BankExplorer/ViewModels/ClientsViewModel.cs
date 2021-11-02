@@ -37,7 +37,6 @@ namespace BankExplorer.ViewModels
         {
             Context = context; Department = department;
             DataSource = Department.Clients;
-            //DataSource = new ObservableCollection<Client>(Context.Clients.Where(p => p.Dep == Department));
         }
         private void SelectClient(object e)
         {
@@ -60,6 +59,7 @@ namespace BankExplorer.ViewModels
             else
             {
                 MainViewModel.Log($"Имя клиента {selClient} отредактировано.");
+                //MessageBox.Show($"В отделе {department} отредактировали клиента {selClient}.");
             }
         }
         private void RemoveClient(object e)
