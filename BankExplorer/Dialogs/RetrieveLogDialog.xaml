@@ -1,0 +1,35 @@
+﻿<Window x:Name="clientsDialog" x:Class="BankExplorer.Dialogs.RetrieveLogDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BankExplorer.Dialogs"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors" xmlns:viewmodels="clr-namespace:BankExplorer.ViewModels" 
+        d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel}"
+        mc:Ignorable="d"
+        Title="Log" Height="358.621" Width="910.184" WindowStartupLocation="CenterScreen" Style="{StaticResource BlackNavy}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+            <Button Content="Retrieve Log" FontSize="20" Style="{StaticResource headerBtn}" Background="Transparent" Margin="0,0,10,0" IsDefault="True" IsEnabled="{Binding RtrEnabled}"
+                    Command="{Binding RetrieveCommand}"/>
+            <ProgressBar Background="Transparent" Height="15" Width="100" Value="{Binding BarValue}" x:Name="track"/>
+            <TextBlock Text="Число записей" Padding="5,0" />
+            <TextBlock Text="{Binding ListCount}" Padding="5,0"/>
+            <!-- Список не формируется в реальном времени?!
+            <StackPanel>
+                <ProgressBar Background="Transparent" Height="15" Width="100" Value="{Binding BarValue}" x:Name="track"/>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Число записей" Padding="0,0,2,0"/>
+                    <TextBlock Text="{Binding ListCount}" Padding="5,0,0,0"/>
+                </StackPanel>
+            </StackPanel>-->
+            <TextBlock Foreground="Red" Text="{Binding ResultText}"/>
+        </StackPanel>
+        <ListBox Style="{StaticResource ResourceKey=BlackNavy}" Grid.Row="1" x:Name="logListBox" HorizontalAlignment="Stretch" BorderThickness="0"
+                 VerticalAlignment="Stretch" ItemsSource="{Binding LogRecords}" FontSize="20" ScrollViewer.VerticalScrollBarVisibility="{Binding ScrollVis}"/>
+    </Grid>
+</Window>

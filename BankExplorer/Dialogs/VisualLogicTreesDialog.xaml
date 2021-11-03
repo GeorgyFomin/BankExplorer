@@ -1,0 +1,33 @@
+﻿<Window x:Name="VisualLogicTreesWindow" x:Class="BankExplorer.Dialogs.VisualLogicTreesDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BankExplorer.Dialogs" xmlns:viewmodels="clr-namespace:BankExplorer.ViewModels" 
+        d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel}"
+        mc:Ignorable="d"
+        Title="VisualLogicTreesDialog" Height="450" Width="800" Background="{StaticResource mainBckgr}">
+    <Window.Resources>
+        <Style x:Key="treeViewItemStyle" TargetType="TreeViewItem" >
+            <Setter Property="Foreground" Value="LightGreen"/>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Button Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="button" Style="{StaticResource headerBtn}" Command="{Binding ShowTreeViewCommand}" 
+                  CommandParameter="{Binding ElementName=VisualLogicTreesWindow}" Content="Show Trees" Background="Transparent"/>
+        <TextBlock Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Visual Tree" Style="{StaticResource ResourceKey=Transp}"/>
+        <TextBlock Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Logical Tree" Style="{StaticResource ResourceKey=Transp}"/>
+        <TreeView Grid.Row="2" x:Name="visualTreeView" Background="Transparent" BorderThickness="0" ItemContainerStyle="{StaticResource treeViewItemStyle}" />
+        <TreeView Grid.Row="2" Grid.Column="1" x:Name="logicTreeView" Background="Transparent" BorderThickness="0" ItemContainerStyle="{StaticResource treeViewItemStyle}"/>
+    </Grid>
+</Window>

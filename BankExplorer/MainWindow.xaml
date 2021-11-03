@@ -73,7 +73,7 @@
         <Grid DockPanel.Dock="Left" Width="300" Style="{StaticResource ResourceKey=BlackNavy}">
             <DockPanel>
                 <Menu Name="menu1" DockPanel.Dock="Top" Margin="10,10,10,10" Background="Transparent" Foreground="Yellow">
-                    <MenuItem ItemsSource="{Binding Deps}">
+                    <MenuItem ItemsSource="{Binding Departments}">
                         <MenuItem.Icon>
                             <Image Source="/Bank.png">
                                 <i:Interaction.Triggers>
@@ -141,7 +141,7 @@
                     </MenuItem>
                 </Menu>
                 <TreeView x:Name="treeView" BorderThickness="0" >
-                    <TreeViewItem x:Name="BankItem" ItemsSource="{Binding Deps}" Background="Transparent">
+                    <TreeViewItem x:Name="BankItem" ItemsSource="{Binding Departments}" Background="Transparent">
                         <!--Deps-->
                         <TreeViewItem.Header>
                             <StackPanel Orientation="Horizontal" >

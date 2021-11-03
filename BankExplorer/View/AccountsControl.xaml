@@ -29,7 +29,7 @@
                 <ContextMenu Style="{StaticResource contextMenu}">
                     <MenuItem Header="Перевод средств" Visibility="{Binding MenuItemsVisibility}" Command="{Binding ShowTargetTransferAccountCommand}" 
                               CommandParameter="{Binding ElementName=AccControl}"/>
-                    <MenuItem Header="Remove" Visibility="{Binding MenuItemsVisibility}" Command="{Binding RemoveAccCommand}" />
+                    <!--<MenuItem Header="Remove" Visibility="{Binding MenuItemsVisibility}" Command="{Binding RemoveAccCommand}" />-->
                     <MenuItem Header="Add Account" Command="{Binding AccountAddCommand}" Visibility="{Binding MenuItemAccountAddVisibility}"
                               CommandParameter="{Binding PlacementTarget, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"/>
                 </ContextMenu>
@@ -45,16 +45,22 @@
             </DataGrid.InputBindings>
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="SelectionChanged">
-                    <i:InvokeCommandAction Command="{Binding AccountSelectionChangedCommand}" CommandParameter="{Binding ElementName=accFromGrid}"/>
+                    <i:InvokeCommandAction Command="{Binding AccountSelectionChangedCommand}" CommandParameter="{Binding ElementName=accountGridView}"/>
+                </i:EventTrigger>
+                <i:EventTrigger EventName="CurrentCellChanged">
+                    <i:InvokeCommandAction Command="{Binding AccountCurrCellChangedCommand}" CommandParameter="{Binding ElementName=accountGridView}"/>
+                </i:EventTrigger>
+                <i:EventTrigger EventName="CellEditEnding">
+                    <i:InvokeCommandAction Command="{Binding AccountCellEditEndingCommand}" CommandParameter="{Binding ElementName=accountGridView}"/>
                 </i:EventTrigger>
                 <i:EventTrigger EventName="RowEditEnding">
-                    <i:InvokeCommandAction Command="{Binding AccountEditEndingCommand}" CommandParameter="{Binding ElementName=accFromGrid}"/>
+                    <i:InvokeCommandAction Command="{Binding AccountRowEditEndingCommand}" CommandParameter="{Binding ElementName=accountGridView}"/>
                 </i:EventTrigger>
                 <i:EventTrigger EventName="AddingNewItem">
-                    <i:InvokeCommandAction Command="{Binding AccountAddingCommand}" CommandParameter="{Binding ElementName=accFromGrid}"/>
+                    <i:InvokeCommandAction Command="{Binding AccountAddingCommand}" CommandParameter="{Binding ElementName=accountGridView}"/>
                 </i:EventTrigger>
                 <i:EventTrigger EventName="BeginningEdit">
-                    <i:InvokeCommandAction Command="{Binding AccountEditBeginCommand}" CommandParameter="{Binding ElementName=accFromGrid}"/>
+                    <i:InvokeCommandAction Command="{Binding AccountEditBeginCommand}" CommandParameter="{Binding ElementName=accountGridView}"/>
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </DataGrid>
@@ -105,7 +111,7 @@
                 </ListBox.ItemTemplate>
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="SelectionChanged">
-                        <i:InvokeCommandAction Command="{Binding TargetTransferAccountSelectionChangedCommand}" CommandParameter="{Binding ElementName=accListBox}"/>
+                        <i:InvokeCommandAction Command="{Binding TargetAccountSelectionChangedCommand}" CommandParameter="{Binding ElementName=accountTargetBox}"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </ListBox>

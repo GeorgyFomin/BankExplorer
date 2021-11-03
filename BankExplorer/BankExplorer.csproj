@@ -28,4 +28,8 @@
     <Resource Include="Account.jpg" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Dialogs\" />
+  </ItemGroup>
+
 </Project>

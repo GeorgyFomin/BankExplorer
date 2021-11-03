@@ -1,6 +1,7 @@
 ﻿using BankExplorer.Commands;
 using Domain.Model;
 using Persistance.Conext;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -13,14 +14,22 @@ namespace BankExplorer.ViewModels
         /// <summary>
         /// Хранит флаг завершения редактирования или добавления отдела в таблицу.
         /// </summary>
-        private bool endEditFlag;
+        //private bool endEditFlag;
+        private bool blockAccountEditEndingHandler;
+        private bool cellEdited;
         /// <summary>
         /// Хранит ссылку на выделенный отдел.
         /// </summary>
-        private Department selDep;
-        private RelayCommand selCommand;
-        private RelayCommand removeDepCommand;
-        private RelayCommand endDepEditCommand;
+        private Department department;
+        private Visibility menuItemDepAddVisibility = Visibility.Visible;
+        private RelayCommand depSelectionCommand;
+        private RelayCommand depRemoveCommand;
+        private RelayCommand depCellEditEndCommand;
+        private RelayCommand depAddCommand;
+        private RelayCommand depRowEditEndCommand;
+        private RelayCommand depCurrCellChangedCommand;
+        private RelayCommand depBeginEditCommand;
+        private RelayCommand depAddingNewCommand;
         #endregion
         #region Properties
         public string BankName { get; set; }
@@ -29,44 +38,91 @@ namespace BankExplorer.ViewModels
         /// Устанавливает и возвращает ссылку на текущий источник данных в таблице. 
         /// </summary>
         public object DataSource { get; set; }
-        public Department SelDep { get => selDep; set { selDep = value; RaisePropertyChanged(nameof(SelDep)); } }
-        public ICommand SelCommand => selCommand ??= new RelayCommand(SelectDepartment);
-        public ICommand RemoveDepCommand => removeDepCommand ??= new RelayCommand(RemoveDepartmnet);
-        public ICommand EndDepEditCommand => endDepEditCommand ??= new RelayCommand(EndEditDepartment);
+        public Department Department { get => department; set { department = value; RaisePropertyChanged(nameof(Department)); } }
+        public Visibility MenuItemDepAddVisibility
+        {
+            get => menuItemDepAddVisibility; set
+            {
+                menuItemDepAddVisibility = value;
+                RaisePropertyChanged(nameof(MenuItemDepAddVisibility));
+            }
+        }
+        public ICommand DepSelectionCommand => depSelectionCommand ??= new RelayCommand(SelectDepartment);
+        public ICommand DepRemoveCommand => depRemoveCommand ??= new RelayCommand(RemoveDepartmnet);
+        public ICommand DepCellEditEndCommand => depCellEditEndCommand ??= new RelayCommand(CellEditEndDepartment);
+        public ICommand DepAddCommand => depAddCommand ??= new RelayCommand(AddDep);
+        public ICommand DepRowEditEndCommand => depRowEditEndCommand ??= new RelayCommand(DepRowEditEnd);
+        public ICommand DepCurrCellChangedCommand => depCurrCellChangedCommand ??= new RelayCommand(DepCurrCellChanged);
+        public ICommand DepBeginEditCommand => depBeginEditCommand ??= new RelayCommand((e) => MenuItemDepAddVisibility = Visibility.Collapsed);
+        public ICommand DepAddingNewCommand => depAddingNewCommand ??= new RelayCommand(AddingNewDepartment);
         #endregion
         private void SelectDepartment(object e)
         {
-            if (endEditFlag)
-            {
-                Context.SaveChanges();
-                endEditFlag = false;
-            }
-            SelDep = (e as DataGrid).SelectedItem is Department dep ? dep : null;
-            if (SelDep == null)
-                MainViewModel.Log($"Добавили отдел.");
+            //if (endEditFlag)
+            //{
+            //    Context.SaveChanges();
+            //    endEditFlag = false;
+            //}
+            Department = (e as DataGrid).SelectedItem is Department dep ? dep : null;
+            //if (Department == null)
+            //    MainViewModel.Log($"Добавили отдел.");
         }
-        private void EndEditDepartment(object e)
+        private void CellEditEndDepartment(object e)
         {
-            endEditFlag = true;
-            MainViewModel.Log($"Имя отдела {selDep} отредактировано.");
+            //endEditFlag = true;
+            cellEdited = true;
         }
         private void RemoveDepartmnet(object obj)
         {
-            if (selDep != null &&
-                MessageBox.Show($"Удалить отдел {selDep}?", $"Удаление отдела {selDep}", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            if (department == null || MessageBox.Show($"Удалить отдел {department}?", $"Удаление отдела {department}", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+                return;
+            foreach (Client client in department.Clients)
             {
-                foreach (Client client in selDep.Clients)
+                foreach (Account account in client.Accounts)
                 {
-                    foreach (Account account in client.Accounts)
-                    {
-                        Context.Accounts.Remove(account);
-                    }
-                    Context.Clients.Remove(client);
+                    Context.Accounts.Remove(account);
                 }
-                Context.Departments.Remove(selDep);
-                Context.SaveChanges();
-                MainViewModel.Log($"Удален отдел {selDep}");
+                Context.Clients.Remove(client);
             }
+            Context.Departments.Remove(department);
+            Context.SaveChanges();
+            MainViewModel.Log($"Удален отдел {department}");
         }
+        private void DepCurrCellChanged(object e)
+        {
+            if (!cellEdited)
+                return;
+            cellEdited = false;
+            (e as DataGrid).CommitEdit();
+            Context.SaveChanges();
+            MainViewModel.Log($"Отдел {department} отредактирован.");
+            //MessageBox.Show("Cell Changed");
+        }
+        private void DepRowEditEnd(object e)
+        {
+            if (blockAccountEditEndingHandler) return;
+            DataGrid grid = e as DataGrid;
+            //MessageBox.Show("Row Edited");
+            cellEdited = false;
+            MenuItemDepAddVisibility = Visibility.Visible;
+            blockAccountEditEndingHandler = true;
+            grid.CommitEdit();
+            Context.SaveChanges();
+            MainViewModel.Log($"Отдел {Department} отредактирован.");
+            //MessageBox.Show($"Отдел {Department} отредактирован.");
+            blockAccountEditEndingHandler = false;
+        }
+        private void AddingNewDepartment(object e)
+        {
+            (e as DataGrid).CanUserAddRows = false;
+            MessageBox.Show("Добавлен отдел.");
+            MainViewModel.Log("Добавлен отдел.");
+        }
+        private void AddDep(object e)
+        {
+            MenuItemDepAddVisibility = Visibility.Collapsed;
+            (e as DataGrid).CanUserAddRows = true;
+        }
+
     }
 }

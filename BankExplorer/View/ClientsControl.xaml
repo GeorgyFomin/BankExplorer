@@ -13,42 +13,44 @@
             <RowDefinition />
         </Grid.RowDefinitions>
         <StackPanel x:Name="panel" Orientation="Horizontal">
-            <TextBlock Text="Clients Of Department" FontSize="20"/>
-            <TextBlock Text="{Binding DepName}" FontSize="20" Margin="5,0,0,0" FontStyle="Italic" FontWeight="Medium" 
-                     Foreground="#FF68B252" />
+            <TextBlock Text="Clients of department " FontSize="20"/>
+            <TextBlock Text="{Binding DepName}" FontSize="20" Margin="5,0,0,0" FontStyle="Italic" FontWeight="Medium" Foreground="#FF68B252" />
         </StackPanel>
         <DataGrid RowHeaderStyle="{StaticResource BlackNavy}" x:Name="clientsGrid" Grid.Row="1" ItemsSource="{Binding DataSource}" DataContext="{Binding Mode=OneWay}" 
                   AutoGenerateColumns="False" Style="{StaticResource ResourceKey=BlackNavy}" RowStyle="{StaticResource RowStyle}" 
-                  BorderThickness="0" CellStyle="{StaticResource CellStyle}" CanUserAddRows="True" ColumnHeaderStyle="{StaticResource ResourceKey=BlackNavy}">
-            <!--<DataGrid.ContextMenu>
+                  BorderThickness="0" CellStyle="{StaticResource CellStyle}" CanUserAddRows="False" ColumnHeaderStyle="{StaticResource ResourceKey=BlackNavy}">
+            <DataGrid.ContextMenu>
                 <ContextMenu Style="{StaticResource contextMenu}">
-                    <MenuItem Header="Remove" Visibility="{Binding RemoveVisibility}" Command="{Binding RemoveClientCommand}" />
-                    <MenuItem Header="Add Client" Command="{Binding AddClientCommand}" Visibility="{Binding AddVisibility}"
+                    <!--<MenuItem Header="Remove" Visibility="{Binding RemoveVisibility}" Command="{Binding RemoveClientCommand}" />-->
+                    <MenuItem Header="Add Client" Command="{Binding ClientAddCommand}" Visibility="{Binding MenuItemClientAddVisibility}"
                               CommandParameter="{Binding PlacementTarget, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"/>
                 </ContextMenu>
-            </DataGrid.ContextMenu>-->
-            <!--<DataGrid.ColumnHeaderStyle>
-                <Style BasedOn="{StaticResource ResourceKey=BlackNavy}"/>
-            </DataGrid.ColumnHeaderStyle>-->
+            </DataGrid.ContextMenu>
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Name" Binding="{Binding Name}" EditingElementStyle="{StaticResource EditingCellTextBox}"/>
             </DataGrid.Columns>
             <DataGrid.InputBindings>
-                <KeyBinding Key="Delete" Command="{Binding RemoveClientCommand}"/>
+                <KeyBinding Key="Delete" Command="{Binding ClientRemoveCommand}"/>
             </DataGrid.InputBindings>
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="SelectionChanged">
-                    <i:InvokeCommandAction Command="{Binding SelCommand}" CommandParameter="{Binding ElementName=clientsGrid}"/>
+                    <i:InvokeCommandAction Command="{Binding ClientSelCommand}" CommandParameter="{Binding ElementName=clientsGrid}"/>
+                </i:EventTrigger>
+                <i:EventTrigger EventName="CurrentCellChanged">
+                    <i:InvokeCommandAction Command="{Binding ClientCurrCellChangedCommand}" CommandParameter="{Binding ElementName=clientsGrid}"/>
                 </i:EventTrigger>
                 <i:EventTrigger EventName="CellEditEnding">
-                    <i:InvokeCommandAction Command="{Binding EndClientEditCommand}" />
+                    <i:InvokeCommandAction Command="{Binding ClientCellEditEndCommand}" />
                 </i:EventTrigger>
-                <!--<i:EventTrigger EventName="BeginningEdit">
-                    <i:InvokeCommandAction Command="{Binding BeginningEdit}" CommandParameter="{Binding ElementName=clientsGrid}"/>
+                <i:EventTrigger EventName="RowEditEnding">
+                    <i:InvokeCommandAction Command="{Binding ClientRowEditEndCommand}" CommandParameter="{Binding ElementName=clientsGrid}" />
+                </i:EventTrigger>
+                <i:EventTrigger EventName="BeginningEdit">
+                    <i:InvokeCommandAction Command="{Binding ClientEditBeginCommand}" CommandParameter="{Binding ElementName=clientsGrid}"/>
                 </i:EventTrigger>
                 <i:EventTrigger EventName="AddingNewItem">
-                    <i:InvokeCommandAction Command="{Binding ClientAddedCommand}" CommandParameter="{Binding ElementName=clientsGrid}"/>
-                </i:EventTrigger>-->
+                    <i:InvokeCommandAction Command="{Binding ClientAddNewCommand}" CommandParameter="{Binding ElementName=clientsGrid}"/>
+                </i:EventTrigger>
             </i:Interaction.Triggers>
         </DataGrid>
     </Grid>

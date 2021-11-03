@@ -14,39 +14,45 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <StackPanel x:Name="panel" Orientation="Horizontal">
-            <TextBlock Text="Departments Of Bank" FontSize="20"/>
+            <TextBlock Text="Departments of bank " FontSize="20"/>
             <TextBox Text="{Binding BankName, UpdateSourceTrigger=PropertyChanged}" FontSize="20" Margin="5,0,0,0" FontStyle="Italic" FontWeight="Medium"
                     Style="{StaticResource EditingCellTextBox}" Background="Transparent" BorderThickness="0"/>
         </StackPanel>
-        <DataGrid RowHeaderStyle="{StaticResource BlackNavy}" Grid.Row="1" x:Name="depsGrid" DataContext="{Binding Mode=OneWay}" ItemsSource="{Binding DataSource}" 
+        <DataGrid RowHeaderStyle="{StaticResource BlackNavy}" Grid.Row="1" x:Name="departmentGridView" DataContext="{Binding Mode=OneWay}" ItemsSource="{Binding DataSource}" 
                   AutoGenerateColumns="False" Style="{StaticResource ResourceKey=BlackNavy}" RowStyle="{StaticResource RowStyle}" 
-                  BorderThickness="0" CellStyle="{StaticResource CellStyle}" CanUserAddRows="True">
-            <!--<DataGrid.ContextMenu>
+                  BorderThickness="0" CellStyle="{StaticResource CellStyle}" CanUserAddRows="False" ColumnHeaderStyle="{StaticResource ResourceKey=BlackNavy}">
+            <DataGrid.ContextMenu>
                 <ContextMenu Style="{StaticResource contextMenu}">
-                    <MenuItem Header="Remove" Visibility="{Binding RemoveVisibility}" Command="{Binding RemoveDepCommand}"/>
-                    <MenuItem Header="Add Department" Visibility="{Binding AddVisibility}" Command="{Binding AddDepCommand}" 
+                    <!--<MenuItem Header="Remove" Visibility="{Binding RemoveVisibility}" Command="{Binding RemoveDepCommand}"/>-->
+                    <MenuItem Header="Add Department" Visibility="{Binding MenuItemDepAddVisibility}" Command="{Binding DepAddCommand}" 
                               CommandParameter="{Binding PlacementTarget, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"/>
                 </ContextMenu>
-            </DataGrid.ContextMenu>-->
+            </DataGrid.ContextMenu>
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Name" Binding="{Binding Name}" EditingElementStyle="{StaticResource EditingCellTextBox}"/>
             </DataGrid.Columns>
-            <DataGrid.ColumnHeaderStyle>
-                <Style BasedOn="{StaticResource ResourceKey=BlackNavy}"/>
-            </DataGrid.ColumnHeaderStyle>
             <DataGrid.InputBindings>
-                <KeyBinding Key="Delete" Command="{Binding RemoveDepCommand}"/>
+                <KeyBinding Key="Delete" Command="{Binding DepRemoveCommand}"/>
             </DataGrid.InputBindings>
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="SelectionChanged">
-                    <i:InvokeCommandAction Command="{Binding SelCommand}" CommandParameter="{Binding ElementName=depsGrid}"/>
+                    <i:InvokeCommandAction Command="{Binding DepSelectionCommand}" CommandParameter="{Binding ElementName=departmentGridView}"/>
+                </i:EventTrigger>
+                <i:EventTrigger EventName="CurrentCellChanged">
+                    <i:InvokeCommandAction Command="{Binding DepCurrCellChangedCommand}" CommandParameter="{Binding ElementName=departmentGridView}"/>
                 </i:EventTrigger>
                 <i:EventTrigger EventName="CellEditEnding">
-                    <i:InvokeCommandAction Command="{Binding EndDepEditCommand}" CommandParameter="{Binding ElementName=depsGrid}"/>
+                    <i:InvokeCommandAction Command="{Binding DepCellEditEndCommand}" CommandParameter="{Binding ElementName=departmentGridView}"/>
                 </i:EventTrigger>
-                <!--<i:EventTrigger EventName="BeginningEdit">
-                    <i:InvokeCommandAction Command="{Binding BeginEdit}" CommandParameter="{Binding ElementName=depsGrid}"/>
-                </i:EventTrigger>-->
+                <i:EventTrigger EventName="BeginningEdit">
+                    <i:InvokeCommandAction Command="{Binding DepBeginEditCommand}" CommandParameter="{Binding ElementName=departmentGridView}"/>
+                </i:EventTrigger>
+                <i:EventTrigger EventName="RowEditEnding">
+                    <i:InvokeCommandAction Command="{Binding DepRowEditEndCommand}" CommandParameter="{Binding ElementName=departmentGridView}"/>
+                </i:EventTrigger>
+                <i:EventTrigger EventName="AddingNewItem">
+                    <i:InvokeCommandAction Command="{Binding DepAddingNewCommand}" CommandParameter="{Binding ElementName=departmentGridView}"/>
+                </i:EventTrigger>
             </i:Interaction.Triggers>
         </DataGrid>
     </Grid>
