@@ -22,11 +22,11 @@ namespace BankExplorer.ViewModels
         private Account account;
         private Account targetAccount;
         private Visibility rightPanelVisibility = Visibility.Hidden;
-        private Visibility menuItemsVisibility = Visibility.Collapsed;
-        private Visibility menuItemAccountAddVisibility = Visibility.Visible;
+        private Visibility menuVisibility = Visibility.Collapsed;
+        private Visibility menuAddVisibility = Visibility.Visible;
         private bool transferEnabled;
         private decimal transferAmount;
-        private RelayCommand accountSelectionChangedCommand;
+        private RelayCommand accountSelectedCommand;
         private RelayCommand removeAccCommand;
         private RelayCommand accountAddCommand;
         private RelayCommand accountAddingCommand;
@@ -35,8 +35,8 @@ namespace BankExplorer.ViewModels
         private RelayCommand accountRowEditEndingCommand;
         private RelayCommand accountCurrCellChangedCommand;
         private RelayCommand transferCommand;
-        private RelayCommand targetAccountSelectionChangedCommand;
-        private RelayCommand showTargetTransferAccountCommand;
+        private RelayCommand targetAccountSelectedCommand;
+        private RelayCommand showTargetAccountCommand;
         #endregion
         #region Properties
         private DataContext Context { get; set; }
@@ -74,20 +74,20 @@ namespace BankExplorer.ViewModels
         public string ClientName => Client?.Name;
         public bool TransferEnabled { get => transferEnabled; set { transferEnabled = value; RaisePropertyChanged(nameof(TransferEnabled)); } }
         public Visibility RightPanelVisibilty { get => rightPanelVisibility; set { rightPanelVisibility = value; RaisePropertyChanged(nameof(RightPanelVisibilty)); } }
-        public Visibility MenuItemsVisibility { get => menuItemsVisibility; set { menuItemsVisibility = value; RaisePropertyChanged(nameof(MenuItemsVisibility)); } }
-        public Visibility MenuItemAccountAddVisibility { get => menuItemAccountAddVisibility; set { menuItemAccountAddVisibility = value; RaisePropertyChanged(nameof(MenuItemAccountAddVisibility)); } }
-        public ICommand AccountSelectionChangedCommand => accountSelectionChangedCommand ??= new RelayCommand((e) => MenuItemsVisibility =
+        public Visibility MenuVisibility { get => menuVisibility; set { menuVisibility = value; RaisePropertyChanged(nameof(MenuVisibility)); } }
+        public Visibility MenuAddVisibility { get => menuAddVisibility; set { menuAddVisibility = value; RaisePropertyChanged(nameof(MenuAddVisibility)); } }
+        public ICommand AccountSelectedCommand => accountSelectedCommand ??= new RelayCommand((e) => MenuVisibility =
         (Account = (e as DataGrid).SelectedItem is Account account ? account : null) != null ? Visibility.Visible : Visibility.Collapsed);
-        public ICommand RemoveAccCommand => removeAccCommand ??= new RelayCommand(RemoveAccount);
+        public ICommand AccountRemoveCommand => removeAccCommand ??= new RelayCommand(RemoveAccount);
         public ICommand AccountAddCommand => accountAddCommand ??= new RelayCommand(AccountAdd);
         public ICommand AccountAddingCommand => accountAddingCommand ??= new RelayCommand((e) => (e as DataGrid).CanUserAddRows = false);
-        public ICommand AccountEditBeginCommand => accountEditBeginCommand ??= new RelayCommand((e) => MenuItemAccountAddVisibility = Visibility.Collapsed);
+        public ICommand AccountEditBeginCommand => accountEditBeginCommand ??= new RelayCommand((e) => MenuAddVisibility = Visibility.Collapsed);
         public ICommand AccountRowEditEndingCommand => accountRowEditEndingCommand ??= new RelayCommand(AccountRowEditEnd);
         public ICommand AccountCellEditEndingCommand => accountCellEditEndingCommand ??= new RelayCommand((e) => cellEdited = true);
         public ICommand AccountCurrCellChangedCommand => accountCurrCellChangedCommand ??= new RelayCommand(AccountCurrCellChanged);
-        public ICommand ShowTargetTransferAccountCommand => showTargetTransferAccountCommand ??= new RelayCommand(ShowTargetTransfer);
+        public ICommand ShowTargetAccountCommand => showTargetAccountCommand ??= new RelayCommand(ShowTargetTransfer);
         public ICommand TransferCommand => transferCommand ??= new RelayCommand(Transfer);
-        public ICommand TargetAccountSelectionChangedCommand => targetAccountSelectionChangedCommand ??= new RelayCommand(TargetAccountSelection);
+        public ICommand TargetAccountSelectedCommand => targetAccountSelectedCommand ??= new RelayCommand(TargetAccountSelection);
         #endregion
         public AccountsViewModel(DataContext context, Client client)
         {
@@ -105,7 +105,7 @@ namespace BankExplorer.ViewModels
             {
                 Account.Client = client;
             }
-            MenuItemAccountAddVisibility = Visibility.Visible;
+            MenuAddVisibility = Visibility.Visible;
             blockAccountEditEndingHandler = true;
             (e as DataGrid).CommitEdit();
             if (AccountAdded)
@@ -135,7 +135,7 @@ namespace BankExplorer.ViewModels
         }
         private void AccountAdd(object e)
         {
-            MenuItemAccountAddVisibility = Visibility.Collapsed;
+            MenuAddVisibility = Visibility.Collapsed;
             (e as DataGrid).CanUserAddRows = true;
         }
         //private void AccountAdding(object e)

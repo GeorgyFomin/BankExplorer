@@ -10,7 +10,7 @@ namespace Domain.Model
         /// Хранит список вкладов.
         /// </summary>
         private ObservableCollection<Account> accounts = new();
-        public virtual Department Dep { get; set; }
+        public virtual Department Department { get; set; }
         /// <summary>
         /// Устанавливает и возвращает ссылки на счета клиента.
         /// </summary>
@@ -43,7 +43,7 @@ namespace Domain.Model
         }
         public override string ToString()
         {
-            return (Dep != null ? Dep.ToString() : string.Empty) + ";Client " + base.ToString();
+            return (Department != null ? Department.ToString() : string.Empty) + ";Client " + base.ToString();
         }
     }
 }

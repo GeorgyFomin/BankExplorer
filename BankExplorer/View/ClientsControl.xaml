@@ -22,7 +22,7 @@
             <DataGrid.ContextMenu>
                 <ContextMenu Style="{StaticResource contextMenu}">
                     <!--<MenuItem Header="Remove" Visibility="{Binding RemoveVisibility}" Command="{Binding RemoveClientCommand}" />-->
-                    <MenuItem Header="Add Client" Command="{Binding ClientAddCommand}" Visibility="{Binding MenuItemClientAddVisibility}"
+                    <MenuItem Header="Add Client" Command="{Binding ClientAddCommand}" Visibility="{Binding MenuAddVisibility}"
                               CommandParameter="{Binding PlacementTarget, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"/>
                 </ContextMenu>
             </DataGrid.ContextMenu>
@@ -34,7 +34,7 @@
             </DataGrid.InputBindings>
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="SelectionChanged">
-                    <i:InvokeCommandAction Command="{Binding ClientSelCommand}" CommandParameter="{Binding ElementName=clientsGrid}"/>
+                    <i:InvokeCommandAction Command="{Binding ClientSelectedCommand}" CommandParameter="{Binding ElementName=clientsGrid}"/>
                 </i:EventTrigger>
                 <i:EventTrigger EventName="CurrentCellChanged">
                     <i:InvokeCommandAction Command="{Binding ClientCurrCellChangedCommand}" CommandParameter="{Binding ElementName=clientsGrid}"/>

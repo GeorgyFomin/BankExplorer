@@ -24,7 +24,7 @@
             <DataGrid.ContextMenu>
                 <ContextMenu Style="{StaticResource contextMenu}">
                     <!--<MenuItem Header="Remove" Visibility="{Binding RemoveVisibility}" Command="{Binding RemoveDepCommand}"/>-->
-                    <MenuItem Header="Add Department" Visibility="{Binding MenuItemDepAddVisibility}" Command="{Binding DepAddCommand}" 
+                    <MenuItem Header="Add Department" Visibility="{Binding MenuAddVisibility}" Command="{Binding DepAddCommand}" 
                               CommandParameter="{Binding PlacementTarget, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"/>
                 </ContextMenu>
             </DataGrid.ContextMenu>

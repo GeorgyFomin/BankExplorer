@@ -14,21 +14,20 @@ namespace BankExplorer.ViewModels
         /// <summary>
         /// Хранит флаг завершения редактирования или добавления отдела в таблицу.
         /// </summary>
-        //private bool endEditFlag;
         private bool blockAccountEditEndingHandler;
         private bool cellEdited;
         /// <summary>
         /// Хранит ссылку на выделенный отдел.
         /// </summary>
         private Department department;
-        private Visibility menuItemDepAddVisibility = Visibility.Visible;
+        private Visibility menuAddVisibility = Visibility.Visible;
         private RelayCommand depSelectionCommand;
         private RelayCommand depRemoveCommand;
-        private RelayCommand depCellEditEndCommand;
         private RelayCommand depAddCommand;
+        private RelayCommand depBeginEditCommand;
+        private RelayCommand depCellEditEndCommand;
         private RelayCommand depRowEditEndCommand;
         private RelayCommand depCurrCellChangedCommand;
-        private RelayCommand depBeginEditCommand;
         private RelayCommand depAddingNewCommand;
         #endregion
         #region Properties
@@ -39,21 +38,14 @@ namespace BankExplorer.ViewModels
         /// </summary>
         public object DataSource { get; set; }
         public Department Department { get => department; set { department = value; RaisePropertyChanged(nameof(Department)); } }
-        public Visibility MenuItemDepAddVisibility
-        {
-            get => menuItemDepAddVisibility; set
-            {
-                menuItemDepAddVisibility = value;
-                RaisePropertyChanged(nameof(MenuItemDepAddVisibility));
-            }
-        }
+        public Visibility MenuAddVisibility { get => menuAddVisibility; set { menuAddVisibility = value; RaisePropertyChanged(nameof(MenuAddVisibility)); } }
         public ICommand DepSelectionCommand => depSelectionCommand ??= new RelayCommand(SelectDepartment);
         public ICommand DepRemoveCommand => depRemoveCommand ??= new RelayCommand(RemoveDepartmnet);
+        public ICommand DepBeginEditCommand => depBeginEditCommand ??= new RelayCommand((e) => MenuAddVisibility = Visibility.Collapsed);
         public ICommand DepCellEditEndCommand => depCellEditEndCommand ??= new RelayCommand(CellEditEndDepartment);
         public ICommand DepAddCommand => depAddCommand ??= new RelayCommand(AddDep);
         public ICommand DepRowEditEndCommand => depRowEditEndCommand ??= new RelayCommand(DepRowEditEnd);
         public ICommand DepCurrCellChangedCommand => depCurrCellChangedCommand ??= new RelayCommand(DepCurrCellChanged);
-        public ICommand DepBeginEditCommand => depBeginEditCommand ??= new RelayCommand((e) => MenuItemDepAddVisibility = Visibility.Collapsed);
         public ICommand DepAddingNewCommand => depAddingNewCommand ??= new RelayCommand(AddingNewDepartment);
         #endregion
         private void SelectDepartment(object e)
@@ -104,7 +96,7 @@ namespace BankExplorer.ViewModels
             DataGrid grid = e as DataGrid;
             //MessageBox.Show("Row Edited");
             cellEdited = false;
-            MenuItemDepAddVisibility = Visibility.Visible;
+            MenuAddVisibility = Visibility.Visible;
             blockAccountEditEndingHandler = true;
             grid.CommitEdit();
             Context.SaveChanges();
@@ -120,7 +112,7 @@ namespace BankExplorer.ViewModels
         }
         private void AddDep(object e)
         {
-            MenuItemDepAddVisibility = Visibility.Collapsed;
+            MenuAddVisibility = Visibility.Collapsed;
             (e as DataGrid).CanUserAddRows = true;
         }
 

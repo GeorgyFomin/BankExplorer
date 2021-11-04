@@ -13,7 +13,7 @@ namespace BankExplorer.ViewModels
         #region Fields
         private bool cellEdited;
         private Client client;
-        private RelayCommand clientSelCommand;
+        private RelayCommand clientSelectedCommand;
         private RelayCommand clientRemoveCommand;
         private RelayCommand clientCellEditEndCommand;
         private RelayCommand clientAddCommand;
@@ -24,8 +24,7 @@ namespace BankExplorer.ViewModels
         private bool blockAccountEditEndingHandler;
         private Department department;
         private ObservableCollection<Client> dataSource;
-        //private bool endEditFlag;
-        private Visibility menuItemClientAddVisibility = Visibility.Visible;
+        private Visibility menuAddVisibility = Visibility.Visible;
         #endregion
         #region Properties
         public DataContext Context { get; set; }
@@ -34,22 +33,15 @@ namespace BankExplorer.ViewModels
         /// </summary>
         public ObservableCollection<Client> DataSource { get => dataSource; set { dataSource = value; RaisePropertyChanged(nameof(DataSource)); } }
         public Department Department { get => department; set { department = value; RaisePropertyChanged(nameof(Department)); } }
-        public Visibility MenuItemClientAddVisibility
-        {
-            get => menuItemClientAddVisibility; set
-            {
-                menuItemClientAddVisibility = value;
-                RaisePropertyChanged(nameof(MenuItemClientAddVisibility));
-            }
-        }
+        public Visibility MenuAddVisibility { get => menuAddVisibility; set { menuAddVisibility = value; RaisePropertyChanged(nameof(MenuAddVisibility)); } }
         public string DepName => Department?.Name;
         public Client Client { get => client; set { client = value; RaisePropertyChanged(nameof(Client)); } }
-        public ICommand ClientSelCommand => clientSelCommand ??= new RelayCommand(SelectClient);
+        public ICommand ClientSelectedCommand => clientSelectedCommand ??= new RelayCommand((e) => Client = (e as DataGrid).SelectedItem is Client client ? client : null);
         public ICommand ClientRemoveCommand => clientRemoveCommand ??= new RelayCommand(RemoveClient);
-        public ICommand ClientCellEditEndCommand => clientCellEditEndCommand ??= new RelayCommand(ClientCellEditEnd);
+        public ICommand ClientCellEditEndCommand => clientCellEditEndCommand ??= new RelayCommand((e) => cellEdited = true);
         public ICommand ClientCurrCellChangedCommand => clientCurrCellChangedCommand ??= new RelayCommand(ClientCurrCellChanged);
         public ICommand ClientAddCommand => clientAddCommand ??= new RelayCommand(ClientAdd);
-        public ICommand ClientEditBeginCommand => clientEditBeginCommand ??= new RelayCommand((e) => MenuItemClientAddVisibility = Visibility.Collapsed);
+        public ICommand ClientEditBeginCommand => clientEditBeginCommand ??= new RelayCommand((e) => MenuAddVisibility = Visibility.Collapsed);
         public ICommand ClientAddNewCommand => clientAddNewCommand ??= new RelayCommand(ClientAddNew);
         public ICommand ClientRowEditEndCommand => clientRowEditEndCommand ??= new RelayCommand(ClientRowEditEnd);
         #endregion
@@ -57,20 +49,6 @@ namespace BankExplorer.ViewModels
         {
             Context = context; Department = department;
             DataSource = Department.Clients;
-        }
-        private void SelectClient(object e)
-        {
-            //if (endEditFlag)
-            //{
-            //    Context.SaveChanges();
-            //    endEditFlag = false;
-            //}
-            Client = (e as DataGrid).SelectedItem is Client client ? client : null;
-        }
-        private void ClientCellEditEnd(object e)
-        {
-            //endEditFlag = true;
-            cellEdited = true;
         }
         private void RemoveClient(object e)
         {
@@ -91,7 +69,7 @@ namespace BankExplorer.ViewModels
         }
         private void ClientAdd(object e)
         {
-            MenuItemClientAddVisibility = Visibility.Collapsed;
+            MenuAddVisibility = Visibility.Collapsed;
             (e as DataGrid).CanUserAddRows = true;
         }
         private void ClientAddNew(object e)
@@ -106,11 +84,11 @@ namespace BankExplorer.ViewModels
             //MessageBox.Show("Row Edited");
             cellEdited = false;
             bool clientAdded;
-            if (clientAdded = Client.Dep == null)
+            if (clientAdded = Client.Department == null)
             {
-                Client.Dep = Department;
+                Client.Department = Department;
             }
-            MenuItemClientAddVisibility = Visibility.Visible;
+            MenuAddVisibility = Visibility.Visible;
             blockAccountEditEndingHandler = true;
             grid.CommitEdit();
             if (clientAdded)

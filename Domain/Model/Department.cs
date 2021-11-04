@@ -21,7 +21,7 @@ namespace Domain.Model
                 clients = value ?? new ObservableCollection<Client>();
                 foreach (Client client in clients)
                 {
-                    client.Dep = this;
+                    client.Department = this;
                 }
             }
         }
