@@ -1,11 +1,12 @@
-﻿using System.IO;
+﻿using CSharpFunctionalExtensions;
+using System.IO;
 
 namespace Domain.Model
 {
     /// <summary>
     /// Имеет имя и идентификатор.
     /// </summary>
-    public class Named : GUIDed
+    public class Named : Entity<int> //GUIDed
     {
         /// <summary>
         /// Хранит заголовок для текстового представления.

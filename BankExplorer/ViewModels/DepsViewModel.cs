@@ -107,7 +107,7 @@ namespace BankExplorer.ViewModels
         private void AddingNewDepartment(object e)
         {
             (e as DataGrid).CanUserAddRows = false;
-            MessageBox.Show("Добавлен отдел.");
+            //MessageBox.Show("Добавлен отдел.");
             MainViewModel.Log("Добавлен отдел.");
         }
         private void AddDep(object e)

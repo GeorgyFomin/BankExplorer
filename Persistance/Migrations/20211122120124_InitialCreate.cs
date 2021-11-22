@@ -1,5 +1,6 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
+
+#nullable disable
 
 namespace Persistance.Migrations
 {
@@ -11,64 +12,65 @@ namespace Persistance.Migrations
                 name: "Departments",
                 columns: table => new
                 {
-                    ID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Departments", x => x.ID);
+                    table.PrimaryKey("PK_Departments", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Clients",
                 columns: table => new
                 {
-                    ID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    DepID = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DepartmentId = table.Column<int>(type: "int", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Clients", x => x.ID);
+                    table.PrimaryKey("PK_Clients", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Clients_Departments_DepID",
-                        column: x => x.DepID,
+                        name: "FK_Clients_Departments_DepartmentId",
+                        column: x => x.DepartmentId,
                         principalTable: "Departments",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
                 name: "Accounts",
                 columns: table => new
                 {
-                    ID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Number = table.Column<int>(type: "int", nullable: false),
                     Size = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Rate = table.Column<double>(type: "float", nullable: false),
                     Cap = table.Column<bool>(type: "bit", nullable: false),
-                    ClientID = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    ClientId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Accounts", x => x.ID);
+                    table.PrimaryKey("PK_Accounts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Accounts_Clients_ClientID",
-                        column: x => x.ClientID,
+                        name: "FK_Accounts_Clients_ClientId",
+                        column: x => x.ClientId,
                         principalTable: "Clients",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Accounts_ClientID",
+                name: "IX_Accounts_ClientId",
                 table: "Accounts",
-                column: "ClientID");
+                column: "ClientId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Clients_DepID",
+                name: "IX_Clients_DepartmentId",
                 table: "Clients",
-                column: "DepID");
+                column: "DepartmentId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

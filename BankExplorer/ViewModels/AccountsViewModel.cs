@@ -59,7 +59,7 @@ namespace BankExplorer.ViewModels
                     {
                         foreach (Account account in client.Accounts)
                         {
-                            if (Account == null || Account.ID != account.ID)
+                            if (Account == null || Account.Id != account.Id)
                                 accounts.Add(account);
                         }
                     }

@@ -1,9 +1,10 @@
-﻿using System;
+﻿using CSharpFunctionalExtensions;
+using System;
 using System.IO;
 
 namespace Domain.Model
 {
-    public class Account : GUIDed
+    public class Account : Entity<int> //GUIDed
     {
         /// <summary>
         /// Хранит заголовок для текстового представления счета.

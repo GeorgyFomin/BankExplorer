@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistance.Conext;
 
+#nullable disable
+
 namespace Persistance.Migrations
 {
     [DbContext(typeof(DataContext))]
@@ -15,21 +17,24 @@ namespace Persistance.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.11")
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "6.0.0")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            modelBuilder.Entity("ClassLibrary.Account", b =>
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+
+            modelBuilder.Entity("Domain.Model.Account", b =>
                 {
-                    b.Property<Guid>("ID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<bool>("Cap")
                         .HasColumnType("bit");
 
-                    b.Property<Guid?>("ClientID")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("ClientId")
+                        .HasColumnType("int");
 
                     b.Property<int>("Number")
                         .HasColumnType("int");
@@ -40,70 +45,74 @@ namespace Persistance.Migrations
                     b.Property<decimal>("Size")
                         .HasColumnType("decimal(18,2)");
 
-                    b.HasKey("ID");
+                    b.HasKey("Id");
 
-                    b.HasIndex("ClientID");
+                    b.HasIndex("ClientId");
 
                     b.ToTable("Accounts");
                 });
 
-            modelBuilder.Entity("ClassLibrary.Client", b =>
+            modelBuilder.Entity("Domain.Model.Client", b =>
                 {
-                    b.Property<Guid>("ID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
 
-                    b.Property<Guid?>("DepID")
-                        .HasColumnType("uniqueidentifier");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int?>("DepartmentId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("ID");
+                    b.HasKey("Id");
 
-                    b.HasIndex("DepID");
+                    b.HasIndex("DepartmentId");
 
                     b.ToTable("Clients");
                 });
 
-            modelBuilder.Entity("ClassLibrary.Department", b =>
+            modelBuilder.Entity("Domain.Model.Department", b =>
                 {
-                    b.Property<Guid>("ID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("ID");
+                    b.HasKey("Id");
 
                     b.ToTable("Departments");
                 });
 
-            modelBuilder.Entity("ClassLibrary.Account", b =>
+            modelBuilder.Entity("Domain.Model.Account", b =>
                 {
-                    b.HasOne("ClassLibrary.Client", "Client")
+                    b.HasOne("Domain.Model.Client", "Client")
                         .WithMany("Accounts")
-                        .HasForeignKey("ClientID");
+                        .HasForeignKey("ClientId");
 
                     b.Navigation("Client");
                 });
 
-            modelBuilder.Entity("ClassLibrary.Client", b =>
+            modelBuilder.Entity("Domain.Model.Client", b =>
                 {
-                    b.HasOne("ClassLibrary.Department", "Dep")
+                    b.HasOne("Domain.Model.Department", "Department")
                         .WithMany("Clients")
-                        .HasForeignKey("DepID");
+                        .HasForeignKey("DepartmentId");
 
-                    b.Navigation("Dep");
+                    b.Navigation("Department");
                 });
 
-            modelBuilder.Entity("ClassLibrary.Client", b =>
+            modelBuilder.Entity("Domain.Model.Client", b =>
                 {
                     b.Navigation("Accounts");
                 });
 
-            modelBuilder.Entity("ClassLibrary.Department", b =>
+            modelBuilder.Entity("Domain.Model.Department", b =>
                 {
                     b.Navigation("Clients");
                 });
