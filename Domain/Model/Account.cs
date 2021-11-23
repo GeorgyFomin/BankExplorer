@@ -1,10 +1,10 @@
-﻿using CSharpFunctionalExtensions;
+﻿
 using System;
 using System.IO;
 
 namespace Domain.Model
 {
-    public class Account : Entity<int> //GUIDed
+    public class Account : Ided
     {
         /// <summary>
         /// Хранит заголовок для текстового представления счета.
@@ -29,7 +29,7 @@ namespace Domain.Model
         public bool Cap { get; set; }
         public virtual Client Client { get; set; }
         #endregion
-        public Account() => Number = GetHashCode();
+        public Account() => Number = Math.Abs(GetHashCode());
         public string AccFields() => $"{Number,-16}{Size,-16:n}\t{Rate:g3}\t{Cap}";
         public string Info() => string.Format(header + "\n" + AccFields());
         #region Printing

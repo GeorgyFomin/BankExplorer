@@ -5,11 +5,11 @@ namespace Domain.Model
     /// <summary>
     /// Имеет идентификатор.
     /// </summary>
-    public class GUIDed
+    public class Ided
     {
         /// <summary>
         /// Устанавливает и возвращает уникальный идентификатор.
         /// </summary>
-        public Guid ID { get; private set; } = Guid.NewGuid();
+        public int Id { get; set; }
     }
 }
